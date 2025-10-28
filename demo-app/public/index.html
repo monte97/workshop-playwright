@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playwright Demo App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Playwright Demo Application</h1>
+            <p>This demo app is designed for the Playwright workshop</p>
+        </header>
+        
+        <main>
+            <section class="form-section">
+                <h2>User Registration Form</h2>
+                <form id="registration-form">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="country">Country:</label>
+                        <select id="country" name="country">
+                            <option value="">Select a country</option>
+                            <option value="us">United States</option>
+                            <option value="it">Italy</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="de">Germany</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newsletter">
+                            <input type="checkbox" id="newsletter" name="newsletter"> Subscribe to newsletter
+                        </label>
+                    </div>
+                    
+                    <button type="submit">Register</button>
+                </form>
+                
+                <div id="form-result" class="result hidden">
+                    <h3>Registration Successful!</h3>
+                    <p>Username: <span id="result-username"></span></p>
+                    <p>Email: <span id="result-email"></span></p>
+                </div>
+            </section>
+            
+            <section class="dynamic-content">
+                <h2>Dynamic Content</h2>
+                <button id="load-data-btn">Load Data</button>
+                <div id="data-container" class="data-container">
+                    <p>Click the button to load dynamic content...</p>
+                </div>
+            </section>
+            
+            <section class="counter-section">
+                <h2>Counter</h2>
+                <div class="counter">
+                    <p>Count: <span id="count">0</span></p>
+                    <button id="increment-btn">Increment</button>
+                    <button id="decrement-btn">Decrement</button>
+                    <button id="reset-btn">Reset</button>
+                </div>
+            </section>
+            
+            <section class="hidden-section">
+                <h2>Hidden Content</h2>
+                <button id="show-hidden-btn">Show Hidden Content</button>
+                <div id="hidden-content" class="hidden-content hidden">
+                    <p>This content is initially hidden and shown on demand</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

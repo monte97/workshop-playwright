@@ -1,0 +1,28 @@
+{
+  "name": "playwright-workshop",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "slidev build",
+    "dev": "slidev --open",
+    "export": "slidev export --output exports/slides-export.pdf",
+    "export:workshop": "slidev export slides.workshop.md --output exports/slides.workshop-export.pdf",
+    "export:meetup": "slidev export slides.meetup.md --output exports/slides.meetup-export.pdf",
+    "dev:workshop": "slidev slides.workshop.md",
+    "dev:meetup": "slidev slides.meetup.md",
+    "build:workshop": "slidev build slides.workshop.md",
+    "build:meetup": "slidev build slides.meetup.md"
+  },
+  "dependencies": {
+    "@slidev/cli": "^0.49.0",
+    "@slidev/theme-default": "*",
+    "@slidev/theme-seriph": "*"
+  },
+  "devDependencies": {
+    "@iconify-json/codicon": "^1.1.29",
+    "@iconify-json/ph": "^1.1.5",
+    "@iconify-json/uil": "^1.1.5",
+    "playwright-chromium": "^1.56.1",
+    "playwright-core": "^1.39.0"
+  }
+}
