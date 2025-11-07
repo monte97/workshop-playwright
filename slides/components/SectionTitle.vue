@@ -6,5 +6,5 @@
 </template>
 
 <script setup>
-// Component for section titles
+// Componente per i titoli di sezione
 </script>

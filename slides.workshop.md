@@ -1,169 +1,53 @@
 ---
 theme: default
-background: https://source.unsplash.com/1920x1080/?technology,code
-layout: cover
-monaco: false
+css: unocss
 drawings:
   persist: false
 components:
-  - components/Exercise
-  - components/SectionTitle
+  - ./slides/components/Exercise
+  - ./slides/components/SectionTitle
 ---
 
-# Playwright Workshop (Full Version)
-
-## End-to-End Testing with Playwright
-
-<Tweet tweetLink="user/status" />
-
----
-
-# Introduction
-
-## Who am I?
-
-- Name
-- Role
-- Experience with testing
-
-<div v-click>
-
-## Today's Workshop
-
-- Learn about Playwright
-- Understand core concepts
-- Hands-on exercises
-- Advanced techniques
-
-</div>
-
----
-
-# Core Concepts
-
-## Types of Testing
-
-- Unit tests: verifying specific functionality
-- Integration tests: seeing how components work together  
-- E2E testing: simulating real users to determine correctness of entire flows
-
-<div v-click>
-
-## Why E2E Testing?
-
-### Benefits:
-- Verify complete flows
-- Identify complex errors
-- Greater confidence
-- Living documentation
-
-</div>
-
-<div v-click>
-
-### Challenges:
-- Unstable tests
-- Slow execution
-- Difficult maintenance
-- Complex setup
-
-</div>
-
----
+<style src="./styles/custom.css"></style>
 
 # Playwright
+## Testing Automatizzato Moderno per il Web
 
-## What is Playwright?
-
-- Open source framework by Microsoft
-- Modern alternative for browser automation
-
-<div v-click>
-
-## What problems does it solve?
-
-- Cross-browser testing
-- Reliable testing
-- Fast execution
-- Simple API
-
+<div class="pt-12">
+  <span class="px-2 py-1 rounded cursor-pointer bg-white bg-opacity-10 hover:bg-opacity-20">
+    End-to-End • Cross-Browser • Affidabile
+  </span>
 </div>
 
-<div v-click>
-
-## Key principles
-
-- Reliability
-- Speed (parallel execution)
-- Simplicity (Multi-browser support)
-
+<div class="abs-br m-6 flex gap-2 items-center">
+  <span class="text-sm opacity-50">Francesco Montelli</span>
 </div>
 
 ---
-
-# Hands-on Workshop
-
-## Exercise 1: Basic Navigation
-
-- Navigate to a website
-- Locate elements
-- Perform actions
-
-<Exercise>
-Try creating your first Playwright test
-</Exercise>
-
-<div v-click>
-
-## Exercise 2: Advanced Interactions
-
-- Working with forms
-- Handling dynamic content
-- File downloads
-
-</div>
-
+src: ./slides/pages/01-0-overview.md
 ---
 
-# Advanced Topics
-
-## Parallel Execution
-
-- Isolated test contexts
-- Preventing interference between tests
-
-<div v-click>
-
-## Authentication & API Testing
-
-- Handling authentication
-- API mocking
-- Network interception
-
-</div>
-
-<div v-click>
-
-## CI Integration
-
-- GitHub Actions
-- Docker containers
-- Parallel test execution
-
-</div>
 
 ---
+src: ./slides/pages/01-intro.md
+---
 
-# Thank You!
+---
+src: ./slides/pages/02-core-concepts.md
+---
 
-## Resources
+---
+src: ./slides/pages/03-demo-live.md
+---
 
-- [Playwright Documentation](https://playwright.dev)
-- [Slide Source](link-to-repo)
-- Contact: [your-email]
+---
+src: ./slides/pages/04-workshop.md
+---
 
-<div v-click>
+---
+src: ./slides/pages/05-advanced.md
+---
 
-## Questions?
-
-</div>
+---
+src: ./slides/pages/06-conclusion.md
+---

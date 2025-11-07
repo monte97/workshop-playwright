@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "email": "test@example.com",
+    "password": "password123",
+    "name": "Test User",
+    "address": {
+      "street": "Via Roma 123",
+      "city": "Milano",
+      "zip": "20100",
+      "country": "Italia"
+    }
+  },
+  {
+    "id": 2,
+    "email": "john@example.com",
+    "password": "john123",
+    "name": "John Doe",
+    "address": {
+      "street": "Corso Venezia 45",
+      "city": "Roma",
+      "zip": "00184",
+      "country": "Italia"
+    }
+  }
+]

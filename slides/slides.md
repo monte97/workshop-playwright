@@ -9,11 +9,11 @@ components:
   - ../components/SectionTitle
 ---
 
-# Playwright Workshop
+# Workshop Playwright
 
-## End-to-End Testing with Playwright
+## Test End-to-End con Playwright
 
-Presenter
+Presentatore
 
 <Tweet tweetLink="user/status" />
 

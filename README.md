@@ -1,193 +1,213 @@
 # Playwright Workshop
 
-Welcome to the Playwright Workshop repository! This project contains educational materials and resources for learning about Playwright, a powerful browser automation library for end-to-end testing.
+Workshop completo su Playwright, la libreria moderna per il testing end-to-end automatizzato di applicazioni web.
 
-## Overview
+## Contenuto del Workshop
 
-This repository includes:
+Questo repository include:
 
-- **Slidev presentations** for interactive learning about Playwright
-- **Demo application** for hands-on practice
-- **Workshop materials** to guide you through Playwright concepts
+- **Slide interattive** costruite con Slidev
+- **Demo application** per esercitazioni pratiche
+- **Speech e contenuti** per diverse durate di presentazione
+- **Esercizi hands-on** per apprendere Playwright
 
-The workshop covers:
-- Core concepts of end-to-end testing
-- Playwright fundamentals and best practices
-- Hands-on exercises and advanced topics
+Il workshop copre:
+- Concetti fondamentali del testing E2E
+- Funzionalità e best practice di Playwright
+- Esercitazioni pratiche guidate
+- Temi avanzati (parallelizzazione, CI/CD integration)
 
-## Prerequisites
+## Prerequisiti
 
-- Node.js (version 16 or higher)
-- npm or yarn package manager
+- Node.js (versione 16 o superiore)
+- npm o yarn
 - Git
-- Playwright (install with `npm install --save-dev playwright-chromium` for PDF export functionality)
 
 ## Quick Start
 
-To get started with the workshop materials:
-
-1. Clone the repository:
+1. **Clona il repository**:
    ```bash
    git clone https://github.com/your-username/workshop-playwright.git
    cd workshop-playwright
    ```
 
-2. Install dependencies:
+2. **Installa le dipendenze**:
    ```bash
    npm install
    ```
 
-3. Run the slides locally:
-   ```bash
-   npm run dev
-   ```
+3. **Avvia le slide o la demo app** (o entrambi):
 
-4. Start the demo application:
    ```bash
+   # Avvia le slide in modalità sviluppo
+   npm run dev:workshop
+
+   # Oppure avvia la demo application
    cd demo-app
    npm install
    npm start
    ```
 
-## Project Structure
+   Le slide saranno disponibili su `http://localhost:3030` e la demo app su `http://localhost:3000`.
+
+## Struttura del Progetto
 
 ```
 workshop-playwright/
-├── slides/                 # Slidev presentation files
-│   ├── components/         # Reusable slide components
-│   └── pages/              # Individual slide pages
-├── demo-app/               # Demo application for testing
-│   ├── public/             # Frontend files
-│   └── server.js           # Simple server to serve the app
-├── package.json            # Main project dependencies and scripts
-├── slides.workshop.md      # Full workshop version slides (all content inline for PDF export)
-└── slides.meetup.md        # Short meetup version slides (all content inline for PDF export)
+├── slides/                    # File della presentazione Slidev
+│   ├── components/            # Componenti riutilizzabili (Exercise, SectionTitle)
+│   └── pages/                 # Pagine individuali delle slide
+│       ├── 00-cover.md        # Copertina
+│       ├── 01-0-overview.md   # Panoramica
+│       ├── 01-intro.md        # Introduzione
+│       ├── 02-core-concepts.md # Concetti fondamentali
+│       ├── 03-demos.md        # Dimostrazioni
+│       ├── 04-workshop.md     # Esercitazioni
+│       ├── 05-advanced.md     # Temi avanzati
+│       └── 99-end.md          # Conclusioni
+├── demo-app/                  # Applicazione demo per il testing
+│   ├── public/                # File frontend
+│   └── server.js              # Server Express
+├── speeches/                  # Contenuti speech per diverse versioni
+│   ├── main-outline.md        # Scaletta completa
+│   ├── workshop-speech.md     # Speech workshop completo (4-8 ore)
+│   ├── intermediate-workshop-speech.md # Workshop intermedio (2 ore)
+│   ├── meetup-speech.md       # Versione meetup (30-40 min)
+│   └── demo-scripts.md        # Script per demo live coding
+├── exports/                   # PDF generati (escluso da Git)
+├── slides.workshop.md         # File principale orchestrazione slide
+└── package.json               # Dipendenze e script npm
 ```
 
-## Demo Application (demo-app/)
+## Lavorare con le Slide
 
-The `demo-app/` directory contains a complete, interactive web application designed specifically for practicing Playwright testing techniques. This application serves as a practical playground to learn and experiment with various testing scenarios.
+### Comandi Disponibili
 
-### Features of the Demo Application:
+```bash
+# Sviluppo
+npm run dev:workshop          # Avvia le slide in modalità sviluppo
+npm run build:workshop        # Build per produzione
 
-- **Registration Form**: Complete form with multiple input types (text, email, password), select dropdown, and checkboxes
-- **Dynamic Content Loading**: Simulated async operations with loading states
-- **Interactive Counter**: With increment, decrement, and reset functionality
-- **Hidden Content**: Elements that appear conditionally to test visibility handling
-- **Responsive Design**: Works across different screen sizes
+# Esportazione PDF
+npm run export:workshop       # Esporta in PDF (salva in exports/)
 
-### Purpose:
+# Con Makefile
+make slides                   # Avvia le slide
+make install                  # Installa tutte le dipendenze
+make all                      # Avvia slide + demo app
+```
 
-This demo application provides realistic testing scenarios including:
+### Struttura delle Slide
 
-- Form filling and validation
-- Button interactions
-- Working with dynamic content and loading states
-- Handling hidden/visible elements
-- Working with different input types (text fields, dropdowns, checkboxes)
-- Testing responsive behavior
+Le slide sono organizzate in modo modulare:
 
-### Running the Demo Application:
+- **slides.workshop.md**: File principale che orchestra le slide
+- **slides/pages/**: Contiene le singole pagine/sezioni
+- **slides/components/**: Componenti Vue riutilizzabili (Exercise, SectionTitle)
 
-1. Navigate to the demo app directory:
-   ```bash
-   cd demo-app
-   ```
+Questa struttura permette di:
+- Modificare singole sezioni senza impattare le altre
+- Riutilizzare componenti attraverso le slide
+- Mantenere il codice organizzato e manutenibile
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+### Contenuti del Workshop
 
-3. Start the application:
-   ```bash
-   npm start
-   ```
+1. **Introduzione** - Presentatore e obiettivi del workshop
+2. **Concetti Fondamentali** - Tipi di testing e sfide dell'E2E
+3. **Playwright Deep Dive** - Caratteristiche e vantaggi
+4. **Esercitazioni Pratiche** - Hands-on exercises
+5. **Temi Avanzati** - Parallelizzazione e integrazione CI/CD
 
-The application will be available at `http://localhost:3000`
+## Demo Application - TechStore E-commerce
 
-### Using with Playwright Tests:
+### Caratteristiche
 
-This application is specifically designed to be tested with Playwright. You can create test files that:
+La directory `demo-app/` contiene un'**applicazione e-commerce completa** progettata specificamente per il workshop Playwright. Offre un ambiente realistico per testare tutti gli scenari comuni di un'applicazione web moderna.
 
-- Fill out the registration form and submit it
-- Click the "Load Data" button and verify the loaded content
-- Interact with the counter controls
-- Test the show/hide functionality for hidden content
-- Verify different page states and transitions
+**Funzionalità E-commerce:**
+- **Catalogo Prodotti**: 10 prodotti con categorie, prezzi, disponibilità
+- **Ricerca e Filtri**: Ricerca testuale, filtro per categoria, ordinamento
+- **Gestione Carrello**: Aggiungi/rimuovi prodotti, modifica quantità
+- **Autenticazione**: Sistema di login con gestione sessioni
+- **Checkout Multi-step**: Form di spedizione e selezione pagamento
+- **Storico Ordini**: Visualizzazione ordini completati
 
-## Available Scripts
+**Ottimizzazioni per Testing:**
+- Tutti gli elementi hanno `data-testid` attributes per selettori stabili
+- Loading states per testare operazioni asincrone
+- Validazione form per testare error handling
+- API REST per intercettare/mockare richieste
+- Design responsive per testare diversi viewport
 
-### Slide Management
+### Avviare la Demo App
 
-- `npm run dev` - Start the Slidev presentation in development mode
-- `npm run build` - Build the presentation for production
-- `npm run export` - Export slides to PDF
-- `npm run export:workshop` - Export workshop slides to PDF
-- `npm run export:meetup` - Export meetup slides to PDF
-- `npm run dev:workshop` - Run the full workshop version of slides
-- `npm run dev:meetup` - Run the meetup version of slides
-- `npm run build:workshop` - Build the workshop version
-- `npm run build:meetup` - Build the meetup version
+**Con Docker (Consigliato):**
+```bash
+cd demo-app
+docker-compose up -d
+```
 
-### PDF Generation
+**Con Node.js:**
+```bash
+cd demo-app
+npm install
+npm start
+```
 
-You can export the slides to PDF format for offline viewing or sharing:
+L'applicazione sarà disponibile su `http://localhost:3000`
 
-- `npm run export` - Export the default slides to PDF (exports to exports/ folder)
-- `npm run export:workshop` - Export the workshop version to PDF (exports to exports/ folder)
-- `npm run export:meetup` - Export the meetup version to PDF (exports to exports/ folder)
-- `npx slidev export --output exports/custom-name.pdf` - Export to a custom filename in the exports folder
+**Credenziali di test:**
+```
+Email: test@example.com
+Password: password123
+```
 
-All exported PDFs are saved to the `exports/` directory, which is excluded from Git tracking.
+### Scenari di Testing
 
-### Demo Application
+L'app è ottimizzata per testare:
 
-- Navigate to `demo-app/` directory to manage the demo app
-- `npm start` - Run the demo application
-- `npm run dev` - Run with nodemon for development
+- **Navigazione**: Ricerca prodotti, filtri, ordinamento
+- **Carrello**: Aggiunta/rimozione prodotti, modifica quantità
+- **Autenticazione**: Login, logout, gestione sessioni
+- **Checkout**: Form multi-step, validazione, completamento ordine
+- **API Mocking**: Intercettare richieste, simulare errori
+- **Visual Testing**: Screenshot comparison, responsive testing
 
-## Workshop Content
+Vedi il [README della demo-app](demo-app/README.md) per esempi di test dettagliati.
 
-The workshop is structured into several key sections:
+## Speech e Contenuti
 
-1. **Introduction** - Learn about the presenter and workshop objectives
-2. **Core Concepts** - Understand different types of testing and E2E challenges
-3. **Playwright Deep Dive** - Explore Playwright's features and benefits
-4. **Hands-on Workshop** - Practical exercises to practice what you've learned
-5. **Advanced Topics** - Techniques for parallel execution and CI integration
+La directory `speeches/` contiene il materiale per presentare il workshop in diverse modalità:
 
-## Demo Application Features
+- **main-outline.md**: Scaletta generale del workshop
+- **workshop-speech.md**: Speech completo (4-8 ore)
+- **intermediate-workshop-speech.md**: Versione intermedia (2 ore)
+- **meetup-speech.md**: Versione breve per meetup (30-40 minuti)
+- **demo-scripts.md**: Script per le demo live coding
 
-The included demo application showcases various elements that can be tested with Playwright:
+Questi contenuti possono essere adattati in base al tempo disponibile e al livello di approfondimento desiderato.
 
-- Registration form with validation
-- Dynamic content loading with async behavior
-- Counter with increment/decrement/reset functionality
-- Hidden content that appears conditionally
-- Responsive design elements
+## Comandi Makefile
 
-## Using the Makefile
+Per facilitare la gestione del progetto, è disponibile un Makefile con i comandi principali:
 
-For easier management of the project, a Makefile is provided with common commands:
+```bash
+make install              # Installa tutte le dipendenze
+make slides               # Avvia le slide in dev mode
+make demo                 # Avvia la demo application
+make all                  # Avvia sia slide che demo app
+make clean                # Pulisce gli asset compilati
+```
 
-- `make install` - Install all project dependencies
-- `make slides` - Start the slides in development mode
-- `make slides-workshop` - Start the workshop version
-- `make slides-meetup` - Start the meetup version
-- `make demo` - Start the demo application
-- `make all` - Start both slides and demo application
-- `make clean` - Clean up built assets
+## Contribuire
 
-## Contributing
+Contributi e miglioramenti sono benvenuti! Puoi:
 
-Feel free to fork this repository and contribute improvements. You can:
+- Aggiungere esempi alla demo application
+- Creare contenuti aggiuntivi per le slide
+- Migliorare gli esercizi del workshop
+- Correggere errori o migliorare le spiegazioni
 
-- Add more examples to the demo application
-- Create additional slide content
-- Improve the workshop exercises
-- Fix typos or improve explanations
+## Licenza
 
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+Questo progetto è rilasciato sotto licenza MIT.

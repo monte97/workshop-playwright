@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - TechStore</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 4rem auto;
+    }
+
+    .login-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .test-credentials {
+      background: var(--background);
+      padding: 1rem;
+      border-radius: 0.375rem;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    .test-credentials h3 {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .test-credentials code {
+      display: block;
+      background: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      margin-top: 0.25rem;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="/" class="logo">🛒 TechStore</a>
+      <nav>
+        <a href="/">Prodotti</a>
+        <a href="/cart" class="cart-badge">
+          🛒 Carrello
+          <span id="cartBadge" class="badge hidden">0</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="login-container">
+        <div class="login-card">
+          <div class="login-header">
+            <h1>Accedi</h1>
+            <p>Inserisci le tue credenziali per continuare</p>
+          </div>
+
+          <div id="errorMessage" class="alert alert-error hidden"></div>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="tua@email.com"
+                data-testid="email-input"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                placeholder="••••••••"
+                data-testid="password-input"
+              >
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg"
+              style="width: 100%;"
+              data-testid="login-button"
+            >
+              Accedi
+            </button>
+          </form>
+
+          <div class="test-credentials">
+            <h3>🧪 Credenziali di test:</h3>
+            <div>
+              Email: <code data-testid="test-email">test@example.com</code>
+            </div>
+            <div>
+              Password: <code data-testid="test-password">password123</code>
+            </div>
+          </div>
+
+          <p class="text-center mt-3" style="font-size: 0.875rem; color: var(--secondary-color);">
+            <a href="/" style="color: var(--primary-color);">← Torna allo shop</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/common.js"></script>
+  <script>
+    // Redirect if already logged in
+    checkAuth().then(user => {
+      if (user) {
+        window.location.href = '/';
+      }
+    });
+
+    // Handle login form submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+
+      errorMessage.classList.add('hidden');
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Redirect to home page on success
+          window.location.href = '/';
+        } else {
+          const error = await response.json();
+          errorMessage.textContent = error.error || 'Credenziali non valide';
+          errorMessage.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        errorMessage.textContent = 'Errore di connessione. Riprova.';
+        errorMessage.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
