@@ -1,6 +1,7 @@
 # Demo Live
 
 <SectionTitle title="03" />
+ciao come
 
 ---
 
@@ -409,6 +410,270 @@ use: {
 **Game changer** per debug test falliti in CI!
 
 </div>
+
+</div>
+
+</div>
+
+---
+
+# Trace Viewer: Anatomia
+
+<div class="grid grid-cols-2 gap-6 text-sm">
+
+<div>
+
+## 📊 Pannello Superiore
+
+**Timeline Interattiva**
+- Scansione temporale delle azioni
+- Screenshot per ogni azione
+- Zoom e navigazione
+- Evidenzia azione corrente
+
+**Actions List (Sinistra)**
+- Elenco completo azioni
+- Icone per tipo (click, fill, navigate)
+- Timing di ogni azione
+- Screenshot preview
+
+**Metadata**
+- Info sull'esecuzione
+- Browser, OS, viewport
+- Durata totale
+- Stato del test
+
+</div>
+
+<div>
+
+## 🎯 Pannello Inferiore
+
+**Locator Tab** ⭐
+- Interagisci con la pagina
+- Testa selettori in tempo reale
+- Genera codice automaticamente
+- Copia per usare nei test
+
+**Network Tab**
+- Tutte le richieste HTTP
+- Request/response headers
+- Payload e timing
+- Evidenzia nella timeline
+
+**Console Tab**
+- Logs del browser
+- Errori JavaScript
+- Warnings e info
+
+**Source Tab**
+- Codice del test
+- Snippet relativi all'azione
+
+</div>
+
+</div>
+
+---
+
+# VSCode Extension
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
+
+## 🎨 Installazione
+
+**Dal Marketplace**:
+1. Apri VS Code
+2. Extensions → cerca "Playwright"
+3. Install "Playwright Test for VSCode"
+
+<v-click>
+
+**Oppure via CLI**:
+```bash
+code --install-extension ms-playwright.playwright
+```
+
+</v-click>
+
+<v-click>
+
+<div class="mt-4 p-4 bg-purple-500 bg-opacity-10 rounded text-sm">
+
+**Perché installarla?**
+
+Interfaccia friendly per tutte le operazioni principali - niente CLI!
+
+</div>
+
+</v-click>
+
+</div>
+
+<div>
+
+## ⚡ Features Principali
+
+<v-clicks>
+
+**1. Run & Debug**
+- Play button per ogni test
+- Debug inline
+- Breakpoint support
+
+**2. Test Explorer**
+- Albero di tutti i test
+- Status visivo (pass/fail)
+- Filtra per stato
+
+**3. Pick Locator**
+- Hover su elementi
+- Genera selettori
+- Copy to clipboard
+
+**4. Record Test**
+- Codegen integrato
+- Genera test mentre navighi
+
+</v-clicks>
+
+</div>
+
+</div>
+
+---
+
+# VSCode Extension: Workflow
+
+<div class="grid grid-cols-2 gap-6 text-sm">
+
+<div>
+
+## 🎮 Testing Panel
+
+**Test Explorer View**:
+```
+tests/
+├── ▶ login.spec.ts
+│   ├── ✅ login con successo
+│   └── ❌ login fallito
+└── ▶ cart.spec.ts
+    ├── ✅ aggiungi prodotto
+    └── ⏱️ checkout (running...)
+```
+
+<v-click>
+
+**Actions disponibili**:
+- ▶️ Run single test
+- 🐛 Debug test
+- 👁️ Show trace
+- 📸 Show last run
+- 🔄 Re-run failed
+
+</v-click>
+
+<v-click>
+
+**Browser selection**:
+- Chromium / Firefox / WebKit
+- Device emulation
+- Headed / Headless
+
+</v-click>
+
+</div>
+
+<div>
+
+## 🔍 Pick Locator
+
+<div v-click>
+
+**Come funziona**:
+1. Click "Pick locator" in toolbar
+2. Browser si apre
+3. Hover su elementi
+4. Selettore generato automaticamente
+
+</div>
+
+<div v-click class="mt-4">
+
+**Output**:
+```js
+// Hover su button → genera:
+page.getByRole('button', { name: 'Submit' })
+
+// Hover su input → genera:
+page.getByLabel('Email address')
+
+// Click → copia negli appunti!
+```
+
+</div>
+
+<div v-click class="mt-4 p-3 bg-green-500 bg-opacity-10 rounded">
+
+**Pro tip**: Usa Pick Locator per trovare selettori mentre scrivi test!
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+# VSCode Extension: Trace Viewer
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
+
+## 🎬 Trace Integration
+
+**Automatico su failure**:
+- Test fallisce
+- Trace generato
+- Click "Show trace" nel test
+- Viewer si apre in VS Code!
+
+<v-click>
+
+**Configurazione**:
+```js
+// playwright.config.ts
+use: {
+  trace: 'on-first-retry',
+}
+```
+
+</v-click>
+
+</div>
+
+<div>
+
+## 🎯 Debugging Flow
+
+<v-clicks>
+
+1. **Test fallisce** ❌
+2. **Click "Show trace"** 🔍
+3. **Viewer si apre**
+   - Vedi ultima azione
+   - Ispeziona DOM
+   - Check network
+4. **Identifica problema** 💡
+5. **Fix nel editor** ✏️
+6. **Re-run test** 🔄
+
+**Tutto dentro VS Code!**
+
+</v-clicks>
 
 </div>
 

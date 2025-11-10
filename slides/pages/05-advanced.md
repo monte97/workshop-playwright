@@ -763,6 +763,272 @@ export default defineConfig({
 
 ---
 
+# Auth: Setup Projects Multipli
+
+<div class="grid grid-cols-2 gap-6 text-xs">
+
+<div>
+
+## 👥 Utenti Diversi, Setup Diversi
+
+**Scenario**: Test per admin e user normale
+
+```bash
+tests/
+├── auth.admin.setup.ts   # Login admin
+├── auth.user.setup.ts    # Login user
+├── admin/
+│   ├── settings.spec.ts
+│   ├── users.spec.ts
+│   └── reports.spec.ts
+└── user/
+    ├── dashboard.spec.ts
+    ├── profile.spec.ts
+    └── notifications.spec.ts
+```
+
+**auth.admin.setup.ts**:
+```js
+import { test as setup } from '@playwright/test';
+
+const authFile = 'playwright/.auth/admin.json';
+
+setup('authenticate as admin', async ({ page }) => {
+  await page.goto('/login');
+  await page.getByLabel('Email')
+    .fill('admin@example.com');
+  await page.getByLabel('Password')
+    .fill('admin123');
+  await page.getByRole('button', { name: 'Sign in' })
+    .click();
+
+  await page.waitForURL('/admin/dashboard');
+
+  await page.context().storageState({ path: authFile });
+});
+```
+
+</div>
+
+<div>
+
+## ⚙️ Config con Progetti
+
+```js
+// playwright.config.ts
+export default defineConfig({
+  projects: [
+    // Setup projects
+    {
+      name: 'setup-admin',
+      testMatch: /.*\.admin\.setup\.ts/
+    },
+    {
+      name: 'setup-user',
+      testMatch: /.*\.user\.setup\.ts/
+    },
+
+    // Test projects con auth admin
+    {
+      name: 'admin-tests',
+      testMatch: /admin\/.*\.spec\.ts/,
+      use: {
+        storageState: 'playwright/.auth/admin.json'
+      },
+      dependencies: ['setup-admin']
+    },
+
+    // Test projects con auth user
+    {
+      name: 'user-tests',
+      testMatch: /user\/.*\.spec\.ts/,
+      use: {
+        storageState: 'playwright/.auth/user.json'
+      },
+      dependencies: ['setup-user']
+    }
+  ]
+});
+```
+
+</div>
+
+</div>
+
+---
+
+# Auth: Vantaggi Multi-Project
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
+
+## ✅ Benefici
+
+<v-clicks>
+
+**1. Isolamento Ruoli**
+```js
+// Admin tests
+test('admin can manage users', async ({ page }) => {
+  // Già loggato come admin!
+  await page.goto('/admin/users');
+  await expect(page.getByText('User Management'))
+    .toBeVisible();
+});
+
+// User tests
+test('user sees dashboard', async ({ page }) => {
+  // Già loggato come user normale!
+  await page.goto('/dashboard');
+  await expect(page.getByText('Welcome back'))
+    .toBeVisible();
+});
+```
+
+**2. Efficienza**
+- Login 1 volta per setup
+- Riuso per tutti i test
+- Velocità massima
+
+**3. Manutenzione**
+- Setup separati
+- Cambio credenziali facile
+- Clear separation
+
+</v-clicks>
+
+</div>
+
+<div>
+
+## 🎯 Esecuzione
+
+```bash
+# Tutti i progetti
+npx playwright test
+
+# Solo admin tests
+npx playwright test --project=admin-tests
+
+# Solo user tests
+npx playwright test --project=user-tests
+
+# Setup viene eseguito automaticamente!
+```
+
+<v-click>
+
+**Output**:
+```bash
+Running 3 projects
+
+[setup-admin] › auth.admin.setup.ts
+  ✓ authenticate as admin (2s)
+
+[admin-tests] › admin/users.spec.ts
+  ✓ admin can manage users (1s)
+  ✓ admin can delete users (1s)
+
+[setup-user] › auth.user.setup.ts
+  ✓ authenticate as user (2s)
+
+[user-tests] › user/dashboard.spec.ts
+  ✓ user sees dashboard (1s)
+
+  5 passed (7s)
+```
+
+</v-click>
+
+</div>
+
+</div>
+
+---
+
+# Auth: Best Practices
+
+<div class="grid grid-cols-2 gap-6 text-sm">
+
+<div>
+
+## ✅ Do's
+
+<v-clicks>
+
+**Aggiorna .gitignore**
+```bash
+# Non committare stati auth!
+playwright/.auth/
+*.json
+```
+
+**Verifica auth nel setup**
+```js
+setup('authenticate', async ({ page }) => {
+  // Login...
+
+  // ✅ Verifica login success
+  await expect(page.getByRole('button',
+    { name: 'Logout' }
+  )).toBeVisible();
+
+  // Salva stato
+  await page.context().storageState({ path });
+});
+```
+
+**Usa environment variables**
+```js
+const email = process.env.TEST_USER_EMAIL;
+const password = process.env.TEST_USER_PASSWORD;
+```
+
+</v-clicks>
+
+</div>
+
+<div>
+
+## ❌ Don'ts
+
+<v-clicks>
+
+**Non hard-code credenziali**
+```js
+// ❌ Male
+await page.fill('email', 'admin@example.com');
+await page.fill('password', 'supersecret123');
+
+// ✅ Bene
+const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
+await page.fill('email', ADMIN_EMAIL);
+await page.fill('password', ADMIN_PASSWORD);
+```
+
+**Non skip verifica**
+```js
+// ❌ Male - non verifica
+await page.click('Login');
+await page.context().storageState({ path });
+
+// ✅ Bene - verifica prima
+await page.click('Login');
+await page.waitForURL(/dashboard/);
+await expect(page.getByText('Welcome'))
+  .toBeVisible();
+await page.context().storageState({ path });
+```
+
+</v-clicks>
+
+</div>
+
+</div>
+
+---
+
 # Performance Testing
 
 <div class="text-xs">
@@ -842,6 +1108,201 @@ test('keyboard navigation', async ({ page }) => {
   await expect(page).toHaveURL(/about/);
 });
 ```
+
+</div>
+
+---
+
+# Video Recording per Demo
+
+<div class="grid grid-cols-2 gap-6 text-sm">
+
+<div>
+
+## 🎥 Registra Video per Utenti
+
+**Use Case**: Creare video demo/tutorial
+
+```js
+// playwright.config.ts
+export default defineConfig({
+  projects: [
+    {
+      name: 'demo-videos',
+      testMatch: /demo\/.*\.spec\.ts/,
+      use: {
+        video: 'on',  // Sempre registra
+        viewport: { width: 1920, height: 1080 },
+        launchOptions: {
+          slowMo: 500  // Rallenta per chiarezza
+        }
+      }
+    }
+  ]
+});
+```
+
+**Test per demo**:
+```js
+// tests/demo/product-search.spec.ts
+test('demo ricerca prodotto', async ({ page }) => {
+  await page.goto('/');
+
+  // Azioni deliberate per demo
+  await page.getByPlaceholder('Cerca...')
+    .fill('laptop');
+
+  await page.waitForTimeout(1000); // Pausa visiva
+
+  await page.getByRole('button', { name: 'Cerca' })
+    .click();
+
+  await page.waitForTimeout(500);
+
+  await expect(page.getByText('Risultati per'))
+    .toBeVisible();
+});
+```
+
+</div>
+
+<div>
+
+## 🎬 Configurazione Video
+
+**Opzioni avanzate**:
+```js
+use: {
+  video: {
+    mode: 'on',
+    size: { width: 1920, height: 1080 },
+    // Salva in cartella specifica
+    dir: './demo-videos'
+  },
+
+  // Rallenta per chiarezza
+  launchOptions: {
+    slowMo: 500  // 500ms tra azioni
+  },
+
+  // Viewport desktop standard
+  viewport: { width: 1920, height: 1080 },
+
+  // Device specifico
+  ...devices['Desktop Chrome']
+}
+```
+
+<v-click>
+
+**Post-processing**:
+```js
+test.afterEach(async ({}, testInfo) => {
+  if (testInfo.status === 'passed') {
+    // Rinomina video per uso demo
+    const video = await testInfo.attachments
+      .find(a => a.name === 'video')?.path;
+
+    if (video) {
+      fs.renameSync(
+        video,
+        `./demo-videos/${testInfo.title}.webm`
+      );
+    }
+  }
+});
+```
+
+</v-click>
+
+</div>
+
+</div>
+
+---
+
+# Video Demo: Best Practices
+
+<div class="grid grid-cols-2 gap-8 text-sm">
+
+<div>
+
+## ✅ Tips per Video Demo
+
+<v-clicks>
+
+**1. Velocità Appropriata**
+```js
+// Rallenta per chiarezza
+launchOptions: { slowMo: 500 }
+
+// Pause tra azioni critiche
+await page.click('button');
+await page.waitForTimeout(800);
+```
+
+**2. Viewport Consistente**
+```js
+// Usa dimensioni standard
+viewport: {
+  width: 1920,
+  height: 1080
+}
+// Risultato pulito e professionale
+```
+
+**3. Dati Significativi**
+```js
+// Usa dati demo realistici
+await page.fill('name', 'Mario Rossi');
+await page.fill('email', 'mario@example.com');
+// Non: 'test123', 'aaa@aaa.com'
+```
+
+</v-clicks>
+
+</div>
+
+<div>
+
+## 🎯 Workflow Consigliato
+
+<v-clicks>
+
+1. **Crea suite demo separata**
+   ```bash
+   tests/demo/
+   ├── 01-signup.spec.ts
+   ├── 02-login.spec.ts
+   ├── 03-search.spec.ts
+   └── 04-checkout.spec.ts
+   ```
+
+2. **Esegui con config specifica**
+   ```bash
+   npx playwright test \
+     --project=demo-videos \
+     tests/demo/
+   ```
+
+3. **Video generati automaticamente**
+   ```
+   demo-videos/
+   ├── 01-signup.webm
+   ├── 02-login.webm
+   ├── 03-search.webm
+   └── 04-checkout.webm
+   ```
+
+4. **Usa per:**
+   - Onboarding utenti
+   - Demo commerciali
+   - Bug reports
+   - Documentation
+
+</v-clicks>
+
+</div>
 
 </div>
 

@@ -23,6 +23,10 @@ components:
   <span class="text-sm opacity-50">Francesco Montelli</span>
 </div>
 
+<!--
+ciao ciao ciao
+-->
+
 ---
 src: ./slides/pages/01-0-overview.md
 ---
@@ -30,6 +34,10 @@ src: ./slides/pages/01-0-overview.md
 
 ---
 src: ./slides/pages/01-intro.md
+---
+
+---
+src: ./slides/pages/01-1-intro-playwright.md
 ---
 
 ---

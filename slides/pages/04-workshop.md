@@ -818,6 +818,259 @@ test('carrello con prodotti mockati',
 
 ---
 
+# Fixtures: Esempio Avanzato
+
+<div class="grid grid-cols-2 gap-6 text-xs">
+
+<div>
+
+## 🛒 Fixture: Carrello Precaricato
+
+```js
+// fixtures/cart.ts
+import { test as base } from '@playwright/test';
+
+export const test = base.extend({
+  pageWithCart: async ({ page }, use) => {
+    // Setup: aggiungi 3 prodotti al carrello
+    await page.goto('/shop');
+
+    await page.click('[data-product="laptop"]');
+    await page.click('Add to Cart');
+
+    await page.click('[data-product="mouse"]');
+    await page.click('Add to Cart');
+
+    await page.click('[data-product="keyboard"]');
+    await page.click('Add to Cart');
+
+    // Vai al carrello
+    await page.goto('/cart');
+
+    // Passa la pagina al test
+    await use(page);
+
+    // Teardown: svuota carrello
+    await page.click('Clear Cart');
+  }
+});
+
+export { expect } from '@playwright/test';
+```
+
+</div>
+
+<div>
+
+## 📝 Utilizzo
+
+```js
+import { test, expect } from './fixtures/cart';
+
+test('can apply coupon', async ({ pageWithCart }) => {
+  // Carrello già pieno con 3 prodotti!
+  await pageWithCart.fill('coupon', 'SAVE10');
+  await expect(pageWithCart.locator('.discount'))
+    .toContainText('-10%');
+});
+
+test('can checkout', async ({ pageWithCart }) => {
+  // Carrello già pieno, nuovo setup per questo test
+  await pageWithCart.click('Checkout');
+  await expect(pageWithCart)
+    .toHaveURL('/payment');
+});
+
+test('can remove item', async ({ pageWithCart }) => {
+  // Carrello già pieno di nuovo
+  await pageWithCart.click('[data-remove="laptop"]');
+  const count = await pageWithCart
+    .locator('[data-cart-count]')
+    .textContent();
+  expect(count).toBe('2');
+});
+```
+
+**Key point**: Le fixture vengono eseguite per ogni test!
+
+</div>
+
+</div>
+
+---
+
+# Fixtures: Composizione
+
+<div class="grid grid-cols-2 gap-6 text-xs">
+
+<div>
+
+## 🔗 Fixtures Multiple
+
+```js
+// fixtures/index.ts
+export const test = base.extend({
+  // Fixture 1: Mock API
+  mockProducts: async ({ page }, use) => {
+    await page.route('**/api/products', route =>
+      route.fulfill({
+        body: JSON.stringify([
+          { id: 1, name: 'Product 1', price: 10 }
+        ])
+      })
+    );
+    await use(page);
+  },
+
+  // Fixture 2: Authenticated page
+  authenticatedPage: async ({ page }, use) => {
+    await page.goto('/login');
+    await page.fill('[name="email"]', 'test@test.com');
+    await page.fill('[name="password"]', 'pass123');
+    await page.click('button[type="submit"]');
+    await page.waitForURL(/dashboard/);
+    await use(page);
+  },
+
+  // Fixture 3: Carrello con prodotti
+  cartWithProducts: async ({
+    authenticatedPage,
+    mockProducts
+  }, use) => {
+    // Compone altre fixture!
+    await authenticatedPage.goto('/shop');
+    await authenticatedPage.click('.add-to-cart');
+    await use(authenticatedPage);
+  }
+});
+```
+
+</div>
+
+<div>
+
+## 🎯 Usa Fixture Composte
+
+```js
+test('checkout flow completo',
+  async ({ cartWithProducts }) => {
+    // Abbiamo:
+    // 1. API mockata (mockProducts)
+    // 2. Utente loggato (authenticatedPage)
+    // 3. Prodotti nel carrello (cartWithProducts)
+
+    await cartWithProducts.click('Checkout');
+
+    await expect(cartWithProducts)
+      .toHaveURL(/checkout/);
+  }
+);
+```
+
+<div class="mt-4 p-3 bg-purple-500 bg-opacity-10 rounded">
+
+**Vantaggi**:
+- ♻️ Riuso massimo
+- 🧩 Componibili
+- 🧹 Cleanup automatico
+- 📦 Separation of concerns
+
+</div>
+
+</div>
+
+</div>
+
+---
+
+# Fixtures: Worker-Scoped
+
+<div class="grid grid-cols-2 gap-6 text-sm">
+
+<div>
+
+## 🌐 Worker-Scoped Fixtures
+
+**Eseguono una volta per worker** invece che per test
+
+```js
+// fixtures/auth.ts
+export const test = base.extend({
+  // Test-scoped (default)
+  page: async ({ page }, use) => {
+    // Esegue per ogni test
+    await use(page);
+  },
+
+  // Worker-scoped
+  workerStorageState: [async ({ browser }, use) => {
+    // Esegue UNA VOLTA per worker
+    const context = await browser.newContext();
+    const page = await context.newPage();
+
+    // Login
+    await page.goto('/login');
+    await page.fill('email', 'test@test.com');
+    await page.fill('password', 'pass');
+    await page.click('button[type="submit"]');
+
+    // Salva stato
+    await context.storageState({
+      path: 'auth-state.json'
+    });
+
+    await context.close();
+    await use('auth-state.json');
+  }, { scope: 'worker' }]
+});
+```
+
+</div>
+
+<div>
+
+## ⚡ Performance Boost
+
+**Confronto**:
+
+```js
+// Test-scoped: login per ogni test
+test('test 1', async ({ page }) => {
+  // Login: 2s
+  // Test: 1s
+}); // Totale: 3s
+
+test('test 2', async ({ page }) => {
+  // Login: 2s
+  // Test: 1s
+}); // Totale: 3s
+
+// 10 test = 30s solo di login! 😱
+```
+
+```js
+// Worker-scoped: login una volta
+test.use({
+  storageState: workerStorageState
+});
+
+test('test 1', async ({ page }) => {
+  // Test: 1s (già loggato!)
+});
+
+test('test 2', async ({ page }) => {
+  // Test: 1s (già loggato!)
+});
+
+// 10 test = 2s login + 10s test = 12s! 🚀
+```
+
+</div>
+
+</div>
+
+---
+
 # Pattern: Page Object Model
 
 <div class="grid grid-cols-2 gap-6 text-xs">
