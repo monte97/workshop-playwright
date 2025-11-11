@@ -99,7 +99,7 @@ npx playwright show-report
 
 ---
 
-# Codegen: Genera Test Automaticamente
+# Codegen: Generazione automatica di test
 
 <div class="grid grid-cols-2">
 
@@ -222,13 +222,6 @@ npx playwright test --ui
 
 </div>
 
----
-layout: center
----
-
-
-![UI Mode](./playwright-ui-mode.png)
-
 <!--
 Modalità che consente di esplorare, eseguire e debuggare i test
 
@@ -247,6 +240,10 @@ Modalità che consente di esplorare, eseguire e debuggare i test
 * **Attachments:** Una scheda per visualizzare eventuali allegati. È usata principalmente per il visual regression testing, dove permette di confrontare le differenze tra l'immagine attesa, quella attuale e un'immagine "diff" che evidenzia le differenze.
 * **Metadata:** Una scheda che riassume le informazioni sul test, come il browser utilizzato, le dimensioni della viewport, la durata totale dell'esecuzione e altri dettagli.
 * **Watch mode:** Un'icona a forma di occhio accanto a ogni test (o per tutti i test). Se attivata, riesegue automaticamente i test ogni volta che si salva una modifica nel file di codice corrispondente.
-
 -->
 
+---
+layout: center
+---
+
+![UI Mode](./playwright-ui-mode.png)

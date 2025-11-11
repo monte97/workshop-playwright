@@ -46,9 +46,6 @@ src: ./pages/01-agenda.md
 src: ./pages/capitolo-1-fondamenti/00-piramide-test.md
 ---
 
----
-src: ./pages/capitolo-1-fondamenti/01-concetti-core.md
----
 
 ---
 src: ./pages/capitolo-1-fondamenti/02-intro-playwright.md

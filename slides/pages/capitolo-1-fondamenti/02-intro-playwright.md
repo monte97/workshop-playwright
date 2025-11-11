@@ -1,3 +1,11 @@
+---
+layout: center
+---
+
+# 🎭 Enter Playwright 🎭
+
+---
+
 # Enter Playwright 🎭
 
 <div class="grid grid-cols-2 gap-8 mt-4">
@@ -175,3 +183,65 @@ await page.getByText('Login');
 </div>
 
 </div>
+
+<!--
+Si basano sull'accessability model del browser.
+In pratica, ad ogni elemento viene assegnato un ruolo ed un nome.
+
+Se fatto bene, molto più stabile dei selettori classici basati su jquery
+
+Ovviamente ha delle logiche di fallback, però non ce ne dobbiamo occupare troppo perché poi vedremo dei modi per aiutarci nella scrittura
+-->
+
+---
+
+# Accessibility Syntax Tree
+
+<div class="grid grid-cols-2 mt-4">
+
+<div>
+
+```html
+<main>
+  <h1>Accedi al tuo account</h1>
+  
+  <form>
+    <div>
+      <label for="user">Username:</label>
+      <input id="user" type="text" placeholder="mario.rossi">
+    </div>
+    
+    <button aria-label="Invia modulo di login">
+      <svg>...</svg> Entra
+    </button>
+  </form>
+</main>
+```
+
+</div>
+
+<div>
+```md
+ROLE: generic (corrisponde a <main>)
+ |
+ +-- ROLE: heading, NAME: "Accedi al tuo account"
+ |    |
+ |    +-- ROLE: statictext, NAME: "Accedi al tuo account"
+ |
+ +-- ROLE: form
+      |
+      +-- ROLE: textbox, NAME: "Username:"
+      |
+      +-- ROLE: button, NAME: "Invia modulo di login"
+```
+
+> Accessibile tramite la dev console
+
+</div>
+
+
+</div>
+
+<!--
+https://developer.chrome.com/blog/full-accessibility-tree?hl=it
+-->
