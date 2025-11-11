@@ -14,23 +14,24 @@ layout: cover
 class: text-center
 ---
 
-# 🎭 Workshop Playwright
+# 🎭 Workshop Playwright 🎭
 
 <div class="text-2xl mt-6 opacity-80">
 Testing E2E Moderno e Affidabile
 </div>
 
 <div class="mt-12 text-lg opacity-70">
-Automatizza i tuoi test web
+Francesco Montelli
 </div>
 
 <div class="absolute bottom-10 left-10">
-<div class="text-sm opacity-70">Francesco Montelli</div>
-<div class="text-xs opacity-50 mt-1">github.com/monte97</div>
+
+https://www.linkedin.com/in/francesco-montelli/
 </div>
 
-<div class="absolute bottom-10 right-10 text-xs opacity-50">
-60-90 minuti • Hands-on
+<div class="absolute bottom-10 right-10">
+
+https://github.com/monte97
 </div>
 
 ---

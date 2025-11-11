@@ -24,6 +24,13 @@ npx playwright test
 
 </div>
 
+<!--
+A differenza di molti altri strumenti non richide configurazioni complesse
+Sufficiente installarlo per inizare a lavorare
+Un unico comando per eseguire i test.
+
+Rispetto alle alternative più "classic" come selenium e cypress è molto più giovane ma ha di gran lunga sorpassato la concorrenza
+-->
 
 ---
 
@@ -116,6 +123,11 @@ test('get started link', async ({ page }) => {
 
 
 </div>
+
+<!--
+Il framework si accolla tutte le parti complicate, come sviluppatori dobbiamo solamente dire con che cosa interagire in che modo.
+Una volta specificato il selettore il sistema garantsice che l'istruzione verrà eseguita solamente nel momento in cui la pagina è pronta
+-->
 
 ---
 

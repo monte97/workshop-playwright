@@ -1,3 +1,7 @@
+---
+layout: center
+---
+
 # Concetti Avanzati
 
 ---

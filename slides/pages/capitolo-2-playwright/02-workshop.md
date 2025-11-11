@@ -128,8 +128,27 @@ Confrontare screenshot per rilevare cambiamenti UI
 
 ### Bonus
 - Screenshot full page
-- Maschere per contenuti dinamici
-- Soglie di tolleranza
+- Screenshot di un componente specifico
+- Soglie di tolleranza (# pixel)
+- Stylesheet custom
+
+
+### Aggiornamenti
+
+```bash
+npx playwright test --update-snapshots
+```
 
 </div>
 </div>
+
+<!--
+Alla prima esecuzione vengono generati gli screenshot.
+
+Gli aggiornamenti possono riguardare anche un sotto-insieme dei test (eg: filtro per progetto)
+ 
+Gli stylesheet custom servono per applicare particolari stili alla pagina, in modo da facilitare il confronto (eg: nascondere elementi dinamici)
+
+Il confronto può avvenire anche tramite locator!
+https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-1
+-->
