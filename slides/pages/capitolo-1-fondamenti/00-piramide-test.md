@@ -1,6 +1,9 @@
-# La Piramide dei Test
+---
+layout: center
+---
 
-![Piramide dei test](./test_piramid.png)
+
+![test](./test_piramid.png)
 
 ---
 
@@ -81,6 +84,3 @@
 
 </div>
 
-<!--
-I test End-to-End (E2E) sono cruciali per garantire che un'applicazione funzioni correttamente nel suo complesso, simulando il percorso dell'utente finale. Tuttavia, la loro implementazione e manutenzione presentano sfide significative che li rendono complessi e costosi.
--->
