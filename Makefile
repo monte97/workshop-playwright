@@ -15,8 +15,8 @@ slides-open: ## Start the slides and open browser automatically
 slides-presenter: ## Start the slides in presenter mode
 	cd slides && npx slidev slides.md --open --presenter
 
-slides-export: ## Export slides to PDF
-	cd slides && npx slidev export slides.md
+slides-export: ## Export slides to PDF (dark mode)
+	cd slides && npx slidev export slides.md --dark --output ../slides-export.pdf
 
 slides-build: ## Build slides for production
 	cd slides && npx slidev build slides.md
