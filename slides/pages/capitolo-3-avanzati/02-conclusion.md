@@ -2,7 +2,7 @@
 
 ### Principi da seguire
 
-<div class="grid-cols-2 mt-8">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
@@ -36,25 +36,10 @@
 
 ---
 
-# Playwright vs Alternative
-
-| Feature | Playwright | Selenium | Cypress |
-|---------|-----------|----------|---------|
-| **Browser Support** | Chromium, Firefox, WebKit | Tutti | Chromium, Firefox |
-| **Auto-waiting** | ✅ Built-in | ❌ Manuale | ✅ Built-in |
-| **Network Mocking** | ✅ Nativo | ❌ Complesso | ✅ Nativo |
-| **Multiple Tabs** | ✅ Facile | ✅ Complesso | ❌ Limitato |
-| **Parallelizzazione** | ✅ Nativa | ⚠️ Grid | ❌ File only |
-| **Mobile Emulation** | ✅ Completa | ⚠️ Limitata | ⚠️ Viewport |
-| **API Testing** | ✅ Nativo | ❌ No | ⚠️ Plugin |
-| **Learning Curve** | 🟢 Bassa | 🔴 Alta | 🟢 Bassa |
-| **Performance** | 🟢 Veloce | 🔴 Lento | 🟡 Media |
-
----
 
 # Quando Usare Playwright
 
-<div class="grid-cols-2">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
@@ -87,7 +72,7 @@
 
 # Risorse
 
-<div class="grid-cols-3">
+<div class="grid grid-cols-3 gap-8">
 
 <div>
 
@@ -127,7 +112,7 @@
 
 ### Cosa Abbiamo Visto
 
-<div class="grid-cols-2 mt-8">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 

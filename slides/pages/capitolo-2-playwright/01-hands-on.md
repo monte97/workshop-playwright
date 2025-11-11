@@ -1,36 +1,27 @@
 # Primo Test
 
+
 ```js
 import { test, expect } from '@playwright/test';
 
 test('login con successo', async ({ page }) => {
-  // Naviga
   await page.goto('/login');
 
-  // Compila form
   await page.getByLabel('Email').fill('user@example.com');
   await page.getByLabel('Password').fill('password123');
 
-  // Submit
   await page.getByRole('button', { name: 'Login' }).click();
 
-  // Verifica
-  await expect(page).toHaveURL(/dashboard/);
+  await expect(page).toHaveURL(/dashboard/); 
   await expect(page.getByText('Benvenuto')).toBeVisible();
 });
 ```
-
-### Features Chiave
-- Selettori semantici (`getByLabel`, `getByRole`)
-- Auto-waiting (niente `sleep()`)
-- Assertions web-first (auto-retry)
-- Codice leggibile come istruzioni umane
 
 ---
 
 # Eseguire i Test
 
-<div class="grid-cols-2">
+<div class="grid grid-cols-2">
 
 <div>
 
@@ -78,21 +69,17 @@ Running 3 tests using 3 workers
 npx playwright show-report
 ```
 
-Include:
-- Timeline dei test
-- Screenshots su failure
-- Video recordings
-- Trace files
-
 </div>
 
 </div>
+
+<!-- Inserire esempio di test report via screenshot -->
 
 ---
 
 # Codegen: Genera Test Automaticamente
 
-<div class="grid-cols-2">
+<div class="grid grid-cols-2">
 
 <div>
 
@@ -152,7 +139,7 @@ npx playwright test --ui
 
 ### Features
 
-<div class="grid-cols-3">
+<div class="grid grid-cols-3">
 
 <div>
 
@@ -189,7 +176,7 @@ npx playwright test --ui
 
 # Trace Viewer: Debug Avanzato
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 mt-4">
 
 <div>
 
@@ -202,8 +189,6 @@ npx playwright test --trace on
 # Visualizza trace
 npx playwright show-trace trace.zip
 ```
-
-**Game changer per debug in CI!**
 
 </div>
 

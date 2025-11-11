@@ -25,98 +25,133 @@ Il workshop copre:
 
 ## Quick Start
 
+### Avviare le Slide
+
 1. **Clona il repository**:
    ```bash
    git clone https://github.com/your-username/workshop-playwright.git
    cd workshop-playwright
    ```
 
-2. **Installa le dipendenze**:
+2. **Installa le dipendenze globali** (se non già installato):
    ```bash
-   npm install
+   npm install -g @slidev/cli
    ```
 
-3. **Avvia le slide o la demo app** (o entrambi):
-
+3. **Avvia le slide**:
    ```bash
-   # Avvia le slide in modalità sviluppo
-   npm run dev:workshop
-
-   # Oppure avvia la demo application
-   cd demo-app
-   npm install
-   npm start
+   cd slides
+   npx slidev slides.md
    ```
 
-   Le slide saranno disponibili su `http://localhost:3030` e la demo app su `http://localhost:3000`.
+   Le slide saranno disponibili su `http://localhost:3030`
+
+   **Modalità presenter:**
+   ```bash
+   npx slidev slides.md --open
+   ```
+
+   **Export PDF:**
+   ```bash
+   npx slidev export slides.md
+   ```
+
+### Avviare la Demo Application
+
+```bash
+cd demo-app
+npm install
+npm start
+```
+
+L'applicazione sarà disponibile su `http://localhost:3000`
 
 ## Struttura del Progetto
 
 ```
 workshop-playwright/
-├── slides/                    # File della presentazione Slidev
-│   ├── components/            # Componenti riutilizzabili (Exercise, SectionTitle)
-│   └── pages/                 # Pagine individuali delle slide
-│       ├── 00-cover.md        # Copertina
-│       ├── 01-0-overview.md   # Panoramica
-│       ├── 01-intro.md        # Introduzione
-│       ├── 02-core-concepts.md # Concetti fondamentali
-│       ├── 03-demos.md        # Dimostrazioni
-│       ├── 04-workshop.md     # Esercitazioni
-│       ├── 05-advanced.md     # Temi avanzati
-│       └── 99-end.md          # Conclusioni
+├── slides/                    # Slide del workshop (Slidev)
+│   ├── pages/                 # Pagine individuali delle slide
+│   │   ├── 01-agenda.md       # Agenda e intro
+│   │   ├── 02-playwright-intro.md  # Introduzione Playwright
+│   │   ├── 03-demo.md         # Demo e tools
+│   │   ├── 04-workshop.md     # Esercitazioni pratiche
+│   │   ├── 05-advanced.md     # Concetti avanzati
+│   │   └── 06-conclusion.md   # Best practices e conclusioni
+│   ├── slides.md              # File principale Slidev
+│   └── README.md              # Documentazione slide
+├── workshop-commons/          # Risorse riutilizzabili
+│   ├── themes/
+│   │   └── modern-minimal/    # Tema dark professionale
+│   ├── styles/
+│   │   └── overrides.css      # Utility CSS opzionali
+│   ├── slides/
+│   │   └── intro/             # Slide introduttive standard
+│   └── README.md              # Guida all'uso delle risorse comuni
 ├── demo-app/                  # Applicazione demo per il testing
 │   ├── public/                # File frontend
 │   └── server.js              # Server Express
 ├── speeches/                  # Contenuti speech per diverse versioni
 │   ├── main-outline.md        # Scaletta completa
-│   ├── workshop-speech.md     # Speech workshop completo (4-8 ore)
-│   ├── intermediate-workshop-speech.md # Workshop intermedio (2 ore)
-│   ├── meetup-speech.md       # Versione meetup (30-40 min)
+│   ├── workshop-speech.md     # Speech completo (4-8 ore)
 │   └── demo-scripts.md        # Script per demo live coding
-├── exports/                   # PDF generati (escluso da Git)
-├── slides.workshop.md         # File principale orchestrazione slide
-└── package.json               # Dipendenze e script npm
+└── README.md                  # Questo file
 ```
 
 ## Lavorare con le Slide
 
-### Comandi Disponibili
+### Comandi Slidev
 
 ```bash
-# Sviluppo
-npm run dev:workshop          # Avvia le slide in modalità sviluppo
-npm run build:workshop        # Build per produzione
+cd slides
 
-# Esportazione PDF
-npm run export:workshop       # Esporta in PDF (salva in exports/)
+# Modalità sviluppo (con hot reload)
+npx slidev slides.md
 
-# Con Makefile
-make slides                   # Avvia le slide
-make install                  # Installa tutte le dipendenze
-make all                      # Avvia slide + demo app
+# Apri automaticamente il browser
+npx slidev slides.md --open
+
+# Modalità presenter (con note e timer)
+npx slidev slides.md --open --presenter
+
+# Build per produzione
+npx slidev build slides.md
+
+# Export PDF
+npx slidev export slides.md
+
+# UI Mode per sviluppo
+npx slidev slides.md --ui
 ```
 
 ### Struttura delle Slide
 
 Le slide sono organizzate in modo modulare:
 
-- **slides.workshop.md**: File principale che orchestra le slide
+- **slides/slides.md**: File principale che orchestra le slide
 - **slides/pages/**: Contiene le singole pagine/sezioni
-- **slides/components/**: Componenti Vue riutilizzabili (Exercise, SectionTitle)
+- **workshop-commons/**: Risorse condivise (tema, stili, slide template)
 
-Questa struttura permette di:
-- Modificare singole sezioni senza impattare le altre
-- Riutilizzare componenti attraverso le slide
-- Mantenere il codice organizzato e manutenibile
+### Personalizzazione
+
+Il workshop usa un tema custom e risorse condivise. Per personalizzare:
+
+1. **Tema**: Modifica `workshop-commons/themes/modern-minimal/style.css`
+2. **Utility CSS**: Aggiungi classi in `workshop-commons/styles/overrides.css`
+3. **Slide intro**: Modifica `workshop-commons/slides/intro/montelli-intro.md`
+
+Vedi [workshop-commons/README.md](workshop-commons/README.md) per dettagli
 
 ### Contenuti del Workshop
 
-1. **Introduzione** - Presentatore e obiettivi del workshop
-2. **Concetti Fondamentali** - Tipi di testing e sfide dell'E2E
-3. **Playwright Deep Dive** - Caratteristiche e vantaggi
-4. **Esercitazioni Pratiche** - Hands-on exercises
-5. **Temi Avanzati** - Parallelizzazione e integrazione CI/CD
+1. **Agenda** - Overview e introduzione al testing E2E
+2. **Introduzione Playwright** - Cos'è, perché usarlo, pilastri fondamentali
+3. **Demo & Tools** - Primo test, Codegen, UI Mode, Trace Viewer
+4. **Workshop Hands-on** - Esercitazioni pratiche guidate
+5. **Concetti Avanzati** - Page Object Model, Fixtures, Mobile, API, CI/CD
+6. **Conclusioni** - Best practices, confronti, risorse
+
+**Durata totale:** 60-90 minuti
 
 ## Demo Application - TechStore E-commerce
 
@@ -187,16 +222,40 @@ La directory `speeches/` contiene il materiale per presentare il workshop in div
 
 Questi contenuti possono essere adattati in base al tempo disponibile e al livello di approfondimento desiderato.
 
-## Comandi Makefile
+## Workshop-Commons
 
-Per facilitare la gestione del progetto, è disponibile un Makefile con i comandi principali:
+Il progetto usa una struttura modulare con risorse condivise in `workshop-commons/`:
 
-```bash
-make install              # Installa tutte le dipendenze
-make slides               # Avvia le slide in dev mode
-make demo                 # Avvia la demo application
-make all                  # Avvia sia slide che demo app
-make clean                # Pulisce gli asset compilati
+### Tema Modern-Minimal
+
+Un tema dark professionale ottimizzato per workshop tecnici:
+- Palette di colori sobria (Teal primary #00A98F)
+- Font Inter per massima leggibilità
+- Syntax highlighting per code blocks
+- Design responsive e accessibile
+
+### Utilizzo nelle Slide
+
+```yaml
+---
+theme: '../workshop-commons/themes/modern-minimal'
+---
+
+# Le tue slide qui
+```
+
+### Utility CSS
+
+Classi CSS opzionali disponibili in `workshop-commons/styles/overrides.css`:
+- Grid layouts (`.grid-cols-2`, `.grid-cols-3`)
+- Card components (`.card`)
+- Badge e tag (`.badge`)
+- Info boxes (`.info-box`, `.warning-box`)
+- Emoji sizing (`.emoji-small`, `.emoji-medium`, `.emoji-large`)
+
+Per importarle:
+```html
+<style src="../workshop-commons/styles/overrides.css"></style>
 ```
 
 ## Contribuire

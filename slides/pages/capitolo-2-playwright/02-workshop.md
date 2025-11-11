@@ -1,17 +1,15 @@
+---
+layout: center
+---
+
 # Workshop Time! 🎯
-
-### Esercizi Pratici
-
-| # | Esercizio | Difficoltà | Tempo |
-|---|-----------|------------|-------|
-| 1 | Login Flow | ⭐ | 10 min |
-| 2 | E-commerce | ⭐⭐ | 15 min |
-| 3 | API Mock | ⭐⭐ | 10 min |
-| 4 | Visual Testing | ⭐⭐⭐ | 15 min |
 
 ---
 
 # Esercizio 1: Login Flow
+
+<div class="grid grid-cols-2 gap-8">
+<div>
 
 ### Obiettivo
 Testare il flusso di login completo
@@ -23,14 +21,23 @@ Testare il flusso di login completo
 4. Verificare redirect a dashboard
 5. Verificare messaggio di benvenuto
 
+</div>
+<div>
+
 ### Bonus
 - Testare login fallito
 - Testare validazione campi
 - Testare "Remember me"
 
+</div>
+</div>
+
 ---
 
 # Esercizio 2: E-commerce
+
+<div class="grid grid-cols-2 gap-8">
+<div>
 
 ### Obiettivo
 Testare il flusso di acquisto end-to-end
@@ -43,17 +50,23 @@ Testare il flusso di acquisto end-to-end
 5. Compilare form spedizione
 6. Confermare ordine
 
+</div>
+<div>
+
 ### Bonus
 - Testare quantità prodotti
 - Testare rimozione dal carrello
 - Testare codici sconto
 
+</div>
+</div>
+
 ---
 
 # Esercizio 3: API Mocking
 
-### Obiettivo
-Intercettare e mockare chiamate API
+<div class="grid grid-cols-3 gap-8">
+<div class="col-span-2">
 
 ```js
 test('mock API response', async ({ page }) => {
@@ -75,12 +88,21 @@ test('mock API response', async ({ page }) => {
 });
 ```
 
+</div>
+<div>
+
+### Obiettivo
+Intercettare e mockare chiamate API
+
+</div>
+</div>
+
 ---
 
 # Esercizio 4: Visual Testing
 
-### Obiettivo
-Confrontare screenshot per rilevare cambiamenti UI
+<div class="grid grid-cols-3 gap-8">
+<div class="col-span-2">
 
 ```js
 test('visual regression', async ({ page }) => {
@@ -98,7 +120,16 @@ test('element screenshot', async ({ page }) => {
 });
 ```
 
+</div>
+<div>
+
+### Obiettivo
+Confrontare screenshot per rilevare cambiamenti UI
+
 ### Bonus
 - Screenshot full page
 - Maschere per contenuti dinamici
 - Soglie di tolleranza
+
+</div>
+</div>

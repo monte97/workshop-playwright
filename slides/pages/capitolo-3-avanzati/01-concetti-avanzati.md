@@ -4,9 +4,7 @@
 
 # Page Object Model
 
-### Organizza il codice per manutenibilità
-
-<div class="grid-cols-2">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
@@ -55,11 +53,6 @@ test('login', async ({ page }) => {
 });
 ```
 
-### Vantaggi
-- Codice riutilizzabile
-- Facile manutenzione
-- Selettori centralizzati
-
 </div>
 
 </div>
@@ -68,7 +61,7 @@ test('login', async ({ page }) => {
 
 # Custom Fixtures
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
@@ -126,6 +119,9 @@ test('dashboard',
 
 # Parallelizzazione
 
+<div class="grid grid-cols-2 gap-8">
+<div>
+
 ### 4x più veloce out of the box
 
 ```js
@@ -145,6 +141,9 @@ export default defineConfig({
 # 4x più veloce! 🚀
 ```
 
+</div>
+<div>
+
 ### Sharding per CI/CD
 
 ```bash
@@ -155,11 +154,14 @@ npx playwright test --shard=3/4
 npx playwright test --shard=4/4
 ```
 
+</div>
+</div>
+
 ---
 
 # Mobile Testing
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
@@ -218,7 +220,7 @@ test('mobile menu',
 
 # API Testing
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 
@@ -274,7 +276,7 @@ test('POST create',
 
 # CI/CD Integration
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 gap-8">
 
 <div>
 

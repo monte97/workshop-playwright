@@ -5,7 +5,6 @@ titleTemplate: '%s - Testing E2E Moderno'
 author: Francesco Montelli
 keywords: playwright,testing,e2e,automation,workshop
 highlighter: shiki
-lineNumbers: true
 drawings:
   persist: false
 transition: slide-left
@@ -22,26 +21,7 @@ Testing E2E Moderno e Affidabile
 </div>
 
 <div class="mt-12 text-lg opacity-70">
-Automatizza i tuoi test web con il framework più potente del 2024
-</div>
-
-<div class="mt-16 flex justify-center gap-8 text-sm">
-<div class="flex items-center gap-2">
-<carbon:checkmark-filled class="text-green-400" />
-Cross-browser
-</div>
-<div class="flex items-center gap-2">
-<carbon:checkmark-filled class="text-green-400" />
-Auto-waiting
-</div>
-<div class="flex items-center gap-2">
-<carbon:checkmark-filled class="text-green-400" />
-Veloce
-</div>
-<div class="flex items-center gap-2">
-<carbon:checkmark-filled class="text-green-400" />
-Affidabile
-</div>
+Automatizza i tuoi test web
 </div>
 
 <div class="absolute bottom-10 left-10">
@@ -62,21 +42,29 @@ src: ./pages/01-agenda.md
 ---
 
 ---
-src: ./pages/02-playwright-intro.md
+src: ./pages/capitolo-1-fondamenti/00-piramide-test.md
 ---
 
 ---
-src: ./pages/03-demo.md
+src: ./pages/capitolo-1-fondamenti/01-concetti-core.md
 ---
 
 ---
-src: ./pages/04-workshop.md
+src: ./pages/capitolo-1-fondamenti/02-intro-playwright.md
 ---
 
 ---
-src: ./pages/05-advanced.md
+src: ./pages/capitolo-2-playwright/01-hands-on.md
 ---
 
 ---
-src: ./pages/06-conclusion.md
+src: ./pages/capitolo-2-playwright/02-workshop.md
+---
+
+---
+src: ./pages/capitolo-3-avanzati/01-concetti-avanzati.md
+---
+
+---
+src: ./pages/capitolo-3-avanzati/02-conclusion.md
 ---
