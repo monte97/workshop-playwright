@@ -9,6 +9,9 @@
       "city": "Milano",
       "zip": "20100",
       "country": "Italia"
+    },
+    "controls": {
+      "canCheckout": true
     }
   },
   {
@@ -21,6 +24,9 @@
       "city": "Roma",
       "zip": "00184",
       "country": "Italia"
+    },
+    "controls": {
+      "canCheckout": null
     }
   }
 ]

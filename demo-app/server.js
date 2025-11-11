@@ -3,6 +3,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
+const { evaluateBooleanControl } = require('./rules');
 
 const app = express();
 const PORT = 3000;
@@ -212,6 +213,16 @@ app.post('/api/checkout', (req, res) => {
 
   if (!req.session.userId) {
     return res.status(401).json({ error: 'Please login to checkout' });
+  }
+
+  const user = users.find(u => u.id === req.session.userId);
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const canCheckout = evaluateBooleanControl(user, 'canCheckout');
+  if (canCheckout === false) {
+    return res.status(403).json({ error: 'You are not authorized to checkout.' });
   }
 
   const { shippingAddress, paymentMethod } = req.body;
