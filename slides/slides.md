@@ -64,5 +64,9 @@ src: ./pages/capitolo-3-avanzati/01-concetti-avanzati.md
 ---
 
 ---
+src: ./pages/capitolo-3-avanzati/03-best-practices-state.md
+---
+
+---
 src: ./pages/capitolo-3-avanzati/02-conclusion.md
 ---

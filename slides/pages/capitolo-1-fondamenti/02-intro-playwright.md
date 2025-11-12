@@ -57,7 +57,6 @@ Rispetto alle alternative più "classic" come selenium e cypress è molto più g
 
 **Web-first assertions**
 - Retry automatico
-- Niente flaky test
 
 </div>
 
