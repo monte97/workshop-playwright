@@ -84,7 +84,7 @@ app.get('/api/categories', (req, res) => {
 
 // POST /api/products - Create new product
 app.post('/api/products', (req, res) => {
-  const { name, description, price, category, image, inStock } = req.body;
+  const { name, description, price, category, image, stock } = req.body;
 
   // Basic validation
   if (!name || !price || !category) {
@@ -101,7 +101,7 @@ app.post('/api/products', (req, res) => {
     price: parseFloat(price),
     category,
     image: image || 'https://via.placeholder.com/300x200?text=Product',
-    inStock: inStock !== undefined ? inStock : true
+    stock: stock !== undefined ? parseInt(stock) : 0
   };
 
   products.push(newProduct);
@@ -117,7 +117,7 @@ app.put('/api/products/:id', (req, res) => {
     return res.status(404).json({ error: 'Product not found' });
   }
 
-  const { name, description, price, category, image, inStock } = req.body;
+  const { name, description, price, category, image, stock } = req.body;
 
   // Update only provided fields
   if (name !== undefined) products[productIndex].name = name;
@@ -125,7 +125,7 @@ app.put('/api/products/:id', (req, res) => {
   if (price !== undefined) products[productIndex].price = parseFloat(price);
   if (category !== undefined) products[productIndex].category = category;
   if (image !== undefined) products[productIndex].image = image;
-  if (inStock !== undefined) products[productIndex].inStock = inStock;
+  if (stock !== undefined) products[productIndex].stock = parseInt(stock);
 
   res.json(products[productIndex]);
 });

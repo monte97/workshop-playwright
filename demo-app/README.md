@@ -154,7 +154,7 @@ curl http://localhost:3000/api/products/1
   "price": 1299.99,
   "category": "electronics",
   "image": "https://...",
-  "inStock": true
+  "stock": 15
 }
 ```
 
@@ -169,7 +169,7 @@ Crea un nuovo prodotto (salvato in memoria, non persistente).
   "price": 99.99,
   "category": "electronics",
   "image": "https://via.placeholder.com/300x200",
-  "inStock": true
+  "stock": 10
 }
 ```
 
@@ -184,7 +184,7 @@ curl -X POST http://localhost:3000/api/products \
     "description": "Latest smartphone model",
     "price": 799.99,
     "category": "electronics",
-    "inStock": true
+    "stock": 25
   }'
 ```
 
@@ -197,7 +197,7 @@ curl -X POST http://localhost:3000/api/products \
   "price": 799.99,
   "category": "electronics",
   "image": "https://via.placeholder.com/300x200?text=Product",
-  "inStock": true
+  "stock": 25
 }
 ```
 
@@ -212,7 +212,7 @@ Aggiorna un prodotto esistente. Puoi inviare solo i campi che vuoi modificare.
   "price": 149.99,
   "category": "home",
   "image": "https://...",
-  "inStock": false
+  "stock": 5
 }
 ```
 
@@ -222,7 +222,7 @@ curl -X PUT http://localhost:3000/api/products/1 \
   -H "Content-Type: application/json" \
   -d '{
     "price": 1199.99,
-    "inStock": false
+    "stock": 0
   }'
 ```
 
@@ -235,7 +235,7 @@ curl -X PUT http://localhost:3000/api/products/1 \
   "price": 1199.99,
   "category": "electronics",
   "image": "https://...",
-  "inStock": false
+  "stock": 0
 }
 ```
 

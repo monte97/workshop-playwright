@@ -237,11 +237,8 @@
           </div>
 
           <div class="form-group">
-            <label for="createInStock">Disponibilità</label>
-            <select id="createInStock" data-testid="create-instock">
-              <option value="true">In Stock</option>
-              <option value="false">Out of Stock</option>
-            </select>
+            <label for="createStock">Quantità disponibile</label>
+            <input type="number" id="createStock" min="0" value="0" data-testid="create-stock">
           </div>
 
           <div class="form-group form-group-full">
@@ -314,11 +311,8 @@
         </div>
 
         <div class="form-group">
-          <label for="editInStock">Disponibilità</label>
-          <select id="editInStock" data-testid="edit-instock">
-            <option value="true">In Stock</option>
-            <option value="false">Out of Stock</option>
-          </select>
+          <label for="editStock">Quantità disponibile</label>
+          <input type="number" id="editStock" min="0" data-testid="edit-stock">
         </div>
 
         <div class="form-group form-group-full">
@@ -400,8 +394,8 @@
             <td><span class="category-tag">${product.category}</span></td>
             <td><strong>${formatCurrency(product.price)}</strong></td>
             <td>
-              <span class="stock-badge ${product.inStock ? 'in-stock' : 'out-of-stock'}">
-                ${product.inStock ? '✓ In Stock' : '✗ Out of Stock'}
+              <span class="stock-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}">
+                ${product.stock > 0 ? `✓ ${product.stock} disponibili` : '✗ Esaurito'}
               </span>
             </td>
             <td>
@@ -471,7 +465,7 @@
         price: parseFloat(document.getElementById('createPrice').value),
         category: document.getElementById('createCategory').value,
         image: document.getElementById('createImage').value || undefined,
-        inStock: document.getElementById('createInStock').value === 'true'
+        stock: parseInt(document.getElementById('createStock').value) || 0
       };
 
       try {
@@ -513,7 +507,7 @@
         document.getElementById('editPrice').value = product.price;
         document.getElementById('editCategory').value = product.category;
         document.getElementById('editImage').value = product.image || '';
-        document.getElementById('editInStock').value = product.inStock.toString();
+        document.getElementById('editStock').value = product.stock || 0;
 
         document.getElementById('editModal').classList.add('active');
         showLoading(false);
@@ -541,7 +535,7 @@
         price: parseFloat(document.getElementById('editPrice').value),
         category: document.getElementById('editCategory').value,
         image: document.getElementById('editImage').value,
-        inStock: document.getElementById('editInStock').value === 'true'
+        stock: parseInt(document.getElementById('editStock').value) || 0
       };
 
       try {
