@@ -101,6 +101,9 @@ demo-app/
 ### Prodotti
 - `GET /api/products` - Lista prodotti (con filtri: ?category=, ?search=, ?sort=)
 - `GET /api/products/:id` - Dettaglio prodotto
+- `POST /api/products` - Crea nuovo prodotto
+- `PUT /api/products/:id` - Aggiorna prodotto
+- `DELETE /api/products/:id` - Elimina prodotto
 - `GET /api/categories` - Lista categorie
 
 ### Autenticazione
@@ -118,6 +121,145 @@ demo-app/
 - `POST /api/checkout` - Completa ordine
 - `GET /api/orders` - Lista ordini utente
 - `GET /api/orders/:id` - Dettaglio ordine
+
+## Documentazione API CRUD Prodotti
+
+### GET /api/products
+Ottieni la lista di tutti i prodotti con filtri opzionali.
+
+**Query Parameters:**
+- `category` (string, opzionale) - Filtra per categoria
+- `search` (string, opzionale) - Ricerca nel nome e descrizione
+- `sort` (string, opzionale) - Ordinamento: `price-asc`, `price-desc`, `name`
+
+**Esempio:**
+```bash
+curl http://localhost:3000/api/products?category=electronics&sort=price-asc
+```
+
+### GET /api/products/:id
+Ottieni i dettagli di un singolo prodotto.
+
+**Esempio:**
+```bash
+curl http://localhost:3000/api/products/1
+```
+
+**Risposta:**
+```json
+{
+  "id": 1,
+  "name": "Laptop Pro X1",
+  "description": "High-performance laptop...",
+  "price": 1299.99,
+  "category": "electronics",
+  "image": "https://...",
+  "inStock": true
+}
+```
+
+### POST /api/products
+Crea un nuovo prodotto (salvato in memoria, non persistente).
+
+**Body (JSON):**
+```json
+{
+  "name": "Nuovo Prodotto",
+  "description": "Descrizione del prodotto",
+  "price": 99.99,
+  "category": "electronics",
+  "image": "https://via.placeholder.com/300x200",
+  "inStock": true
+}
+```
+
+**Campi obbligatori:** `name`, `price`, `category`
+
+**Esempio:**
+```bash
+curl -X POST http://localhost:3000/api/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Smartphone Z10",
+    "description": "Latest smartphone model",
+    "price": 799.99,
+    "category": "electronics",
+    "inStock": true
+  }'
+```
+
+**Risposta (201 Created):**
+```json
+{
+  "id": 11,
+  "name": "Smartphone Z10",
+  "description": "Latest smartphone model",
+  "price": 799.99,
+  "category": "electronics",
+  "image": "https://via.placeholder.com/300x200?text=Product",
+  "inStock": true
+}
+```
+
+### PUT /api/products/:id
+Aggiorna un prodotto esistente. Puoi inviare solo i campi che vuoi modificare.
+
+**Body (JSON):** (tutti i campi sono opzionali)
+```json
+{
+  "name": "Nome Aggiornato",
+  "description": "Nuova descrizione",
+  "price": 149.99,
+  "category": "home",
+  "image": "https://...",
+  "inStock": false
+}
+```
+
+**Esempio:**
+```bash
+curl -X PUT http://localhost:3000/api/products/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "price": 1199.99,
+    "inStock": false
+  }'
+```
+
+**Risposta (200 OK):**
+```json
+{
+  "id": 1,
+  "name": "Laptop Pro X1",
+  "description": "High-performance laptop...",
+  "price": 1199.99,
+  "category": "electronics",
+  "image": "https://...",
+  "inStock": false
+}
+```
+
+### DELETE /api/products/:id
+Elimina un prodotto.
+
+**Esempio:**
+```bash
+curl -X DELETE http://localhost:3000/api/products/1
+```
+
+**Risposta (200 OK):**
+```json
+{
+  "success": true,
+  "product": {
+    "id": 1,
+    "name": "Laptop Pro X1",
+    ...
+  }
+}
+```
+
+**Nota:** Tutte le modifiche (creazione, aggiornamento, eliminazione) sono salvate solo in memoria. Al riavvio del server, i prodotti torneranno allo stato iniziale caricato da `data/products.json`.
 
 ## Scenari di Testing Consigliati
 
@@ -165,7 +307,41 @@ await page.getByTestId('place-order-button').click();
 await expect(page.getByTestId('order-number')).toBeVisible();
 ```
 
-### 5. Testing Avanzato
+### 5. Testing API CRUD Prodotti
+```javascript
+// Test creazione prodotto
+const response = await page.request.post('http://localhost:3000/api/products', {
+  data: {
+    name: 'Test Product',
+    price: 99.99,
+    category: 'electronics',
+    description: 'A test product'
+  }
+});
+expect(response.ok()).toBeTruthy();
+const product = await response.json();
+expect(product.id).toBeDefined();
+expect(product.name).toBe('Test Product');
+
+// Test aggiornamento prodotto
+await page.request.put(`http://localhost:3000/api/products/${product.id}`, {
+  data: { price: 79.99, inStock: false }
+});
+
+// Test eliminazione prodotto
+const deleteResponse = await page.request.delete(
+  `http://localhost:3000/api/products/${product.id}`
+);
+expect(deleteResponse.ok()).toBeTruthy();
+
+// Verifica che il prodotto sia stato eliminato
+const getResponse = await page.request.get(
+  `http://localhost:3000/api/products/${product.id}`
+);
+expect(getResponse.status()).toBe(404);
+```
+
+### 6. Testing Avanzato
 
 **Intercettare API**:
 ```javascript

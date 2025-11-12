@@ -23,7 +23,7 @@ app.use(session({
 app.use(express.static('public'));
 
 // Load data
-const products = JSON.parse(fs.readFileSync('./data/products.json', 'utf8'));
+let products = JSON.parse(fs.readFileSync('./data/products.json', 'utf8'));
 const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 
 // In-memory storage for carts and orders
@@ -80,6 +80,67 @@ app.get('/api/products/:id', (req, res) => {
 app.get('/api/categories', (req, res) => {
   const categories = [...new Set(products.map(p => p.category))];
   res.json(categories);
+});
+
+// POST /api/products - Create new product
+app.post('/api/products', (req, res) => {
+  const { name, description, price, category, image, inStock } = req.body;
+
+  // Basic validation
+  if (!name || !price || !category) {
+    return res.status(400).json({ error: 'Name, price, and category are required' });
+  }
+
+  // Generate new ID
+  const newId = Math.max(...products.map(p => p.id), 0) + 1;
+
+  const newProduct = {
+    id: newId,
+    name,
+    description: description || '',
+    price: parseFloat(price),
+    category,
+    image: image || 'https://via.placeholder.com/300x200?text=Product',
+    inStock: inStock !== undefined ? inStock : true
+  };
+
+  products.push(newProduct);
+  res.status(201).json(newProduct);
+});
+
+// PUT /api/products/:id - Update product
+app.put('/api/products/:id', (req, res) => {
+  const productId = parseInt(req.params.id);
+  const productIndex = products.findIndex(p => p.id === productId);
+
+  if (productIndex === -1) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  const { name, description, price, category, image, inStock } = req.body;
+
+  // Update only provided fields
+  if (name !== undefined) products[productIndex].name = name;
+  if (description !== undefined) products[productIndex].description = description;
+  if (price !== undefined) products[productIndex].price = parseFloat(price);
+  if (category !== undefined) products[productIndex].category = category;
+  if (image !== undefined) products[productIndex].image = image;
+  if (inStock !== undefined) products[productIndex].inStock = inStock;
+
+  res.json(products[productIndex]);
+});
+
+// DELETE /api/products/:id - Delete product
+app.delete('/api/products/:id', (req, res) => {
+  const productId = parseInt(req.params.id);
+  const productIndex = products.findIndex(p => p.id === productId);
+
+  if (productIndex === -1) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  const deletedProduct = products.splice(productIndex, 1)[0];
+  res.json({ success: true, product: deletedProduct });
 });
 
 // POST /api/auth/login - Login user
@@ -306,6 +367,10 @@ app.get('/checkout', (req, res) => {
 
 app.get('/orders', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'orders.html'));
+});
+
+app.get('/admin/products', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin-products.html'));
 });
 
 // Start server

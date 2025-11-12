@@ -25,6 +25,7 @@ function updateAuthUI(user) {
   const userGreeting = document.getElementById('userGreeting');
   const loginLink = document.getElementById('loginLink');
   const ordersLink = document.getElementById('ordersLink');
+  const adminLink = document.getElementById('adminLink');
   const logoutBtn = document.getElementById('logoutBtn');
 
   if (user) {
@@ -34,6 +35,7 @@ function updateAuthUI(user) {
     }
     if (loginLink) loginLink.classList.add('hidden');
     if (ordersLink) ordersLink.classList.remove('hidden');
+    if (adminLink) adminLink.classList.remove('hidden');
     if (logoutBtn) {
       logoutBtn.classList.remove('hidden');
       logoutBtn.addEventListener('click', logout);
@@ -42,6 +44,7 @@ function updateAuthUI(user) {
     if (userGreeting) userGreeting.classList.add('hidden');
     if (loginLink) loginLink.classList.remove('hidden');
     if (ordersLink) ordersLink.classList.add('hidden');
+    if (adminLink) adminLink.classList.add('hidden');
     if (logoutBtn) logoutBtn.classList.add('hidden');
   }
 }
