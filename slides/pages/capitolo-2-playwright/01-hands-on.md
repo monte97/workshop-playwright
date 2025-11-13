@@ -6,7 +6,7 @@ layout: center
 
 ---
 
-# Primo Test
+# Sintassi
 
 
 ```js

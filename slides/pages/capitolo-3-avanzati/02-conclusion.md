@@ -1,3 +1,12 @@
+---
+layout: center
+---
+
+# Conclusioni
+
+---
+
+
 # Best Practices
 
 ### Principi da seguire

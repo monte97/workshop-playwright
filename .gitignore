@@ -68,3 +68,7 @@ app/
 # Exports
 exports/
 slides-export.pdf
+
+QWEN.md
+CLAUDE.md
+
