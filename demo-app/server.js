@@ -3,10 +3,33 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 const { evaluateBooleanControl } = require('./rules');
 
 const app = express();
 const PORT = 3000;
+
+// Swagger definition
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'TechStore API',
+      version: '1.0.0',
+      description: 'API documentation for the TechStore e-commerce demo application.',
+    },
+    servers: [
+      {
+        url: `http://localhost:${PORT}`,
+        description: 'Development server',
+      },
+    ],
+  },
+  apis: ['./server.js'], // Files to scan for API docs
+};
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 // Middleware
 app.use(express.json());
@@ -22,6 +45,9 @@ app.use(session({
 // Serve static files
 app.use(express.static('public'));
 
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Load data
 let products = JSON.parse(fs.readFileSync('./data/products.json', 'utf8'));
 const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
@@ -30,11 +56,43 @@ const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 const carts = {};
 const orders = [];
 
-// ============================================
+// ============================================ 
 // API ROUTES
-// ============================================
+// ============================================ 
 
-// GET /api/products - Get all products with optional filters
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Get all products with optional filters
+ *     description: Returns a list of products, with optional filtering by category, search term, and sorting.
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by category.
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by name or description.
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [price-asc, price-desc, name]
+ *         description: Sort order.
+ *     responses:
+ *       200:
+ *         description: A list of products.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Product'
+ */
 app.get('/api/products', (req, res) => {
   const { category, search, sort } = req.query;
 
@@ -66,7 +124,28 @@ app.get('/api/products', (req, res) => {
   res.json(filteredProducts);
 });
 
-// GET /api/products/:id - Get single product
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   get:
+ *     summary: Get a single product by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The product ID.
+ *     responses:
+ *       200:
+ *         description: The product details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Product not found.
+ */
 app.get('/api/products/:id', (req, res) => {
   const product = products.find(p => p.id === parseInt(req.params.id));
   if (product) {
@@ -76,13 +155,47 @@ app.get('/api/products/:id', (req, res) => {
   }
 });
 
-// GET /api/categories - Get all categories
+/**
+ * @swagger
+ * /api/categories:
+ *   get:
+ *     summary: Get all product categories
+ *     responses:
+ *       200:
+ *         description: A list of unique category names.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ */
 app.get('/api/categories', (req, res) => {
   const categories = [...new Set(products.map(p => p.category))];
   res.json(categories);
 });
 
-// POST /api/products - Create new product
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Create a new product
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewProduct'
+ *     responses:
+ *       201:
+ *         description: The created product.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Missing required fields.
+ */
 app.post('/api/products', (req, res) => {
   const { name, description, price, category, image, stock } = req.body;
 
@@ -108,7 +221,33 @@ app.post('/api/products', (req, res) => {
   res.status(201).json(newProduct);
 });
 
-// PUT /api/products/:id - Update product
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   put:
+ *     summary: Update an existing product
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The product ID.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateProduct'
+ *     responses:
+ *       200:
+ *         description: The updated product.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Product not found.
+ */
 app.put('/api/products/:id', (req, res) => {
   const productId = parseInt(req.params.id);
   const productIndex = products.findIndex(p => p.id === productId);
@@ -130,7 +269,24 @@ app.put('/api/products/:id', (req, res) => {
   res.json(products[productIndex]);
 });
 
-// DELETE /api/products/:id - Delete product
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   delete:
+ *     summary: Delete a product
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The product ID.
+ *     responses:
+ *       200:
+ *         description: Deletion successful.
+ *       404:
+ *         description: Product not found.
+ */
 app.delete('/api/products/:id', (req, res) => {
   const productId = parseInt(req.params.id);
   const productIndex = products.findIndex(p => p.id === productId);
@@ -143,7 +299,28 @@ app.delete('/api/products/:id', (req, res) => {
   res.json({ success: true, product: deletedProduct });
 });
 
-// POST /api/auth/login - Login user
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful.
+ *       401:
+ *         description: Invalid credentials.
+ */
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -166,13 +343,31 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
-// POST /api/auth/logout - Logout user
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Logout a user
+ *     responses:
+ *       200:
+ *         description: Logout successful.
+ */
 app.post('/api/auth/logout', (req, res) => {
   req.session.destroy();
   res.json({ success: true });
 });
 
-// GET /api/auth/me - Get current user
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user info
+ *     responses:
+ *       200:
+ *         description: Current user data.
+ *       401:
+ *         description: Not authenticated.
+ */
 app.get('/api/auth/me', (req, res) => {
   if (req.session.userId) {
     const user = users.find(u => u.id === req.session.userId);
@@ -190,14 +385,43 @@ app.get('/api/auth/me', (req, res) => {
   }
 });
 
-// GET /api/cart - Get cart
+/**
+ * @swagger
+ * /api/cart:
+ *   get:
+ *     summary: Get the current user's cart
+ *     responses:
+ *       200:
+ *         description: The user's cart.
+ */
 app.get('/api/cart', (req, res) => {
   const sessionId = req.session.id;
   const cart = carts[sessionId] || [];
   res.json(cart);
 });
 
-// POST /api/cart - Add item to cart
+/**
+ * @swagger
+ * /api/cart:
+ *   post:
+ *     summary: Add an item to the cart
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productId:
+ *                 type: integer
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Item added successfully.
+ *       404:
+ *         description: Product not found.
+ */
 app.post('/api/cart', (req, res) => {
   const { productId, quantity = 1 } = req.body;
   const sessionId = req.session.id;
@@ -226,7 +450,32 @@ app.post('/api/cart', (req, res) => {
   res.json({ success: true, cart: carts[sessionId] });
 });
 
-// PUT /api/cart/:productId - Update cart item quantity
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   put:
+ *     summary: Update cart item quantity
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               quantity:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Quantity updated.
+ *       404:
+ *         description: Cart or item not found.
+ */
 app.put('/api/cart/:productId', (req, res) => {
   const { quantity } = req.body;
   const sessionId = req.session.id;
@@ -250,7 +499,23 @@ app.put('/api/cart/:productId', (req, res) => {
   }
 });
 
-// DELETE /api/cart/:productId - Remove item from cart
+/**
+ * @swagger
+ * /api/cart/{productId}:
+ *   delete:
+ *     summary: Remove an item from the cart
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Item removed.
+ *       404:
+ *         description: Cart not found.
+ */
 app.delete('/api/cart/:productId', (req, res) => {
   const sessionId = req.session.id;
   const productId = parseInt(req.params.productId);
@@ -263,7 +528,27 @@ app.delete('/api/cart/:productId', (req, res) => {
   res.json({ success: true, cart: carts[sessionId] });
 });
 
-// POST /api/checkout - Process checkout
+/**
+ * @swagger
+ * /api/checkout:
+ *   post:
+ *     summary: Process checkout
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Checkout'
+ *     responses:
+ *       200:
+ *         description: Checkout successful.
+ *       400:
+ *         description: Cart is empty or missing fields.
+ *       401:
+ *         description: User not logged in.
+ *       403:
+ *         description: User not authorized to checkout.
+ */
 app.post('/api/checkout', (req, res) => {
   const sessionId = req.session.id;
   const cart = carts[sessionId];
@@ -320,7 +605,17 @@ app.post('/api/checkout', (req, res) => {
   res.json({ success: true, order });
 });
 
-// GET /api/orders - Get user's orders
+/**
+ * @swagger
+ * /api/orders:
+ *   get:
+ *     summary: Get user's orders
+ *     responses:
+ *       200:
+ *         description: A list of the user's orders.
+ *       401:
+ *         description: Not authenticated.
+ */
 app.get('/api/orders', (req, res) => {
   if (!req.session.userId) {
     return res.status(401).json({ error: 'Not authenticated' });
@@ -330,7 +625,25 @@ app.get('/api/orders', (req, res) => {
   res.json(userOrders);
 });
 
-// GET /api/orders/:id - Get single order
+/**
+ * @swagger
+ * /api/orders/{id}:
+ *   get:
+ *     summary: Get a single order by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: The order details.
+ *       403:
+ *         description: Unauthorized.
+ *       404:
+ *         description: Order not found.
+ */
 app.get('/api/orders/:id', (req, res) => {
   const order = orders.find(o => o.id === parseInt(req.params.id));
 
@@ -345,9 +658,9 @@ app.get('/api/orders/:id', (req, res) => {
   res.json(order);
 });
 
-// ============================================
+// ============================================ 
 // HTML ROUTES
-// ============================================
+// ============================================ 
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -379,4 +692,81 @@ app.listen(PORT, () => {
   console.log(`\n📝 Test credentials:`);
   console.log(`   Email: test@example.com`);
   console.log(`   Password: password123\n`);
+  console.log(`📄 API docs available at http://localhost:${PORT}/api-docs`);
 });
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         category:
+ *           type: string
+ *         price:
+ *           type: number
+ *         stock:
+ *           type: integer
+ *         image:
+ *           type: string
+ *         description:
+ *           type: string
+ *     NewProduct:
+ *       type: object
+ *       required: [name, price, category]
+ *       properties:
+ *         name:
+ *           type: string
+ *         description:
+ *           type: string
+ *         price:
+ *           type: number
+ *         category:
+ *           type: string
+ *         image:
+ *           type: string
+ *         stock:
+ *           type: integer
+ *     UpdateProduct:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *         description:
+ *           type: string
+ *         price:
+ *           type: number
+ *         category:
+ *           type: string
+ *         image:
+ *           type: string
+ *         stock:
+ *           type: integer
+ *     Checkout:
+ *       type: object
+ *       required: [shippingAddress, paymentMethod]
+ *       properties:
+ *         shippingAddress:
+ *           type: object
+ *           properties:
+ *             firstName:
+ *               type: string
+ *             lastName:
+ *               type: string
+ *             address:
+ *               type: string
+ *             city:
+ *               type: string
+ *             zipCode:
+ *               type: string
+ *             phone:
+ *               type: string
+ *         paymentMethod:
+ *           type: string
+ *           enum: [credit-card, paypal, bank-transfer]
+ */
