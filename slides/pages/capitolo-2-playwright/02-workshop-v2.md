@@ -29,6 +29,32 @@ npm install && npm start
 
 ---
 
+# Esercizio 0: Setup del Progetto
+
+1.  **Crea una nuova cartella per il progetto e naviga al suo interno:**
+    ```bash
+    mkdir my-playwright-tests
+    cd my-playwright-tests
+    ```
+
+2.  **Esegui il comando di inizializzazione di Playwright:**
+    ```bash
+    npm init playwright@latest
+    ```
+
+3.  **Segui le istruzioni a schermo:**
+    - Scegli tra TypeScript o JavaScript.
+    - Scegli il nome della cartella dei test (es. `tests`).
+    - Aggiungi un workflow di GitHub Actions (opzionale).
+
+Playwright creerà la configurazione di base, installerà i browser e preparerà tutto il necessario per iniziare.
+
+<!--
+Prima di scrivere i test, è necessario creare un nuovo progetto Playwright.
+-->
+
+---
+
 # Esercizio 1: Generazione Automatica di Test
 
 - **Codegen**: Strumento che registra le interazioni dell'utente e le converte in codice di test.
@@ -489,9 +515,10 @@ Questo report fornisce agli sviluppatori tutte le informazioni necessarie per id
 
 **Argomenti trattati:**
 
+0.  **Setup del Progetto**: Creazione di un nuovo progetto Playwright.
 1.  **Generazione Automatica di Test**: Utilizzo di Codegen e UI Mode per accelerare la creazione di test.
 2.  **Visual Regression Testing**: Verifica dell'integrità visiva tramite confronto di screenshot.
-3.  **Locator Semantici**: Scrittura di test robusti e manutenibili.
+3.  **Ottimizzazione del Login**: Utilizzo di `setup` project per un'autenticazione efficiente.
 4.  **Isolamento dei Test**: Gestione dello stato tramite API e fixture per test affidabili.
 5.  **Test di Accessibilità**: Integrazione di controlli automatici di accessibilità con `axe-core`.
 

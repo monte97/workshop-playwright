@@ -22,6 +22,12 @@ npm init playwright@latest
 npx playwright test
 ```
 
+Disponibile estensione VSCode
+
+```bash
+code --install-extension ms-playwright.playwright
+```
+
 
 </div>
 
@@ -38,6 +44,8 @@ Sufficiente installarlo per inizare a lavorare
 Un unico comando per eseguire i test.
 
 Rispetto alle alternative più "classic" come selenium e cypress è molto più giovane ma ha di gran lunga sorpassato la concorrenza
+
+La presenza dell'estensione per VS aumenta di molto l'esperienza sviluppatore migliorando di molto il flusso di lavoro. Consente infatti di eseguire la maggior parte dei comandi di playwright tramite una GUI piuttosto che chiedendo comandi tramite shell
 -->
 
 ---
@@ -87,6 +95,7 @@ Rispetto alle alternative più "classic" come selenium e cypress è molto più g
 - Setup veloce
 - Tooling eccezionale
 - Debug intuitivo
+- Estensione VS Code per una migliore integrazione
 
 </div>
 
