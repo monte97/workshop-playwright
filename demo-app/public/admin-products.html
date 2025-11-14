@@ -214,7 +214,7 @@
       <!-- Create Product Section -->
       <div id="createSection" class="admin-section" style="display: none;">
         <h2>Crea Nuovo Prodotto</h2>
-        <form id="createProductForm" class="product-form">
+        <form id="createProductForm" class="product-form" novalidate>
           <div class="form-group">
             <label for="createName">Nome *</label>
             <input type="text" id="createName" required data-testid="create-name">
@@ -459,11 +459,20 @@
     document.getElementById('createProductForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const name = document.getElementById('createName').value.trim();
+      const price = document.getElementById('createPrice').value;
+      const category = document.getElementById('createCategory').value;
+
+      if (!name || !price || !category) {
+        showAlert('Nome, Prezzo e Categoria sono campi obbligatori.', 'error');
+        return;
+      }
+
       const productData = {
-        name: document.getElementById('createName').value,
+        name,
         description: document.getElementById('createDescription').value,
-        price: parseFloat(document.getElementById('createPrice').value),
-        category: document.getElementById('createCategory').value,
+        price: parseFloat(price),
+        category,
         image: document.getElementById('createImage').value || undefined,
         stock: parseInt(document.getElementById('createStock').value) || 0
       };

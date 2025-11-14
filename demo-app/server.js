@@ -10,6 +10,9 @@ const { evaluateBooleanControl } = require('./rules');
 const app = express();
 const PORT = 3000;
 
+// Helper function for async delay
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 // Swagger definition
 const swaggerOptions = {
   swaggerDefinition: {
@@ -56,9 +59,9 @@ const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf8'));
 const carts = {};
 const orders = [];
 
-// ============================================ 
+// ============================================
 // API ROUTES
-// ============================================ 
+// ============================================
 
 /**
  * @swagger
@@ -196,12 +199,25 @@ app.get('/api/categories', (req, res) => {
  *       400:
  *         description: Missing required fields.
  */
-app.post('/api/products', (req, res) => {
+app.post('/api/products', async (req, res) => {
+  // Introduce a random delay 70% of the time to simulate network latency
+  if (Math.random() < 0.7) {
+    const delaySeconds = 3;
+    console.log(`[API DELAY] Adding a ${delaySeconds}s delay to POST /api/products`);
+    await delay(delaySeconds * 1000);
+  }
+
   const { name, description, price, category, image, stock } = req.body;
 
-  // Basic validation
+  // Enhanced validation
   if (!name || !price || !category) {
-    return res.status(400).json({ error: 'Name, price, and category are required' });
+    return res.status(400).json({ error: 'Name, price, and category are required fields.' });
+  }
+
+  // Check for duplicate product name (case-insensitive)
+  const existingProduct = products.find(p => p.name.toLowerCase() === name.toLowerCase());
+  if (existingProduct) {
+    return res.status(409).json({ error: `Product name "${name}" is already in use.` });
   }
 
   // Generate new ID
@@ -658,9 +674,187 @@ app.get('/api/orders/:id', (req, res) => {
   res.json(order);
 });
 
-// ============================================ 
+// ============================================
+// USER CRUD API ROUTES
+// ============================================
+
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users (with passwords visible for demo purposes)
+ *     responses:
+ *       200:
+ *         description: A list of all users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+app.get('/api/users', (req, res) => {
+  // Return all users, including passwords since this is a demo
+  res.json(users);
+});
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get a single user by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The user ID.
+ *     responses:
+ *       200:
+ *         description: The user details (including password for demo purposes).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ */
+app.get('/api/users/:id', (req, res) => {
+  const user = users.find(u => u.id === parseInt(req.params.id));
+  if (user) {
+    // Return user with password since this is a demo
+    res.json(user);
+  } else {
+    res.status(404).json({ error: 'User not found' });
+  }
+});
+
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Create a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/NewUser'
+ *     responses:
+ *       201:
+ *         description: The created user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Missing required fields.
+ */
+app.post('/api/users', (req, res) => {
+  const { email, password, name, address, controls } = req.body;
+
+  // Basic validation
+  if (!email || !password || !name) {
+    return res.status(400).json({ error: 'Email, password, and name are required' });
+  }
+
+  // Generate new ID
+  const newId = Math.max(...users.map(u => u.id), 0) + 1;
+
+  const newUser = {
+    id: newId,
+    email,
+    password,
+    name,
+    address: address || {}, // Default to empty object
+    controls: controls || {} // Default to empty object
+  };
+
+  users.push(newUser);
+  res.status(201).json(newUser);
+});
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update an existing user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The user ID.
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUser'
+ *     responses:
+ *       200:
+ *         description: The updated user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found.
+ */
+app.put('/api/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const userIndex = users.findIndex(u => u.id === userId);
+
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const { email, password, name, address, controls } = req.body;
+
+  // Update only provided fields
+  if (email !== undefined) users[userIndex].email = email;
+  if (password !== undefined) users[userIndex].password = password;
+  if (name !== undefined) users[userIndex].name = name;
+  if (address !== undefined) users[userIndex].address = address;
+  if (controls !== undefined) users[userIndex].controls = controls;
+
+  res.json(users[userIndex]);
+});
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   delete:
+ *     summary: Delete a user
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The user ID.
+ *     responses:
+ *       200:
+ *         description: Deletion successful.
+ *       404:
+ *         description: User not found.
+ */
+app.delete('/api/users/:id', (req, res) => {
+  const userId = parseInt(req.params.id);
+  const userIndex = users.findIndex(u => u.id === userId);
+
+  if (userIndex === -1) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  const deletedUser = users.splice(userIndex, 1)[0];
+  res.json({ success: true, user: deletedUser });
+});
+
+// ============================================
 // HTML ROUTES
-// ============================================ 
+// ============================================
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -769,4 +963,62 @@ app.listen(PORT, () => {
  *         paymentMethod:
  *           type: string
  *           enum: [credit-card, paypal, bank-transfer]
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         name:
+ *           type: string
+ *         address:
+ *           $ref: '#/components/schemas/Address'
+ *         controls:
+ *           $ref: '#/components/schemas/Controls'
+ *     NewUser:
+ *       type: object
+ *       required: [email, password, name]
+ *       properties:
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         name:
+ *           type: string
+ *         address:
+ *           $ref: '#/components/schemas/Address'
+ *         controls:
+ *           $ref: '#/components/schemas/Controls'
+ *     UpdateUser:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ *         name:
+ *           type: string
+ *         address:
+ *           $ref: '#/components/schemas/Address'
+ *         controls:
+ *           $ref: '#/components/schemas/Controls'
+ *     Address:
+ *       type: object
+ *       properties:
+ *         street:
+ *           type: string
+ *         city:
+ *           type: string
+ *         zip:
+ *           type: string
+ *         country:
+ *           type: string
+ *     Controls:
+ *       type: object
+ *       properties:
+ *         canCheckout:
+ *           type: boolean
  */
