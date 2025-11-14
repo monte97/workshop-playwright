@@ -56,7 +56,7 @@ src: ./pages/capitolo-2-playwright/01-hands-on.md
 ---
 
 ---
-src: ./pages/capitolo-2-playwright/02-workshop-v2.md
+src: ./pages/capitolo-2-playwright/02-workshop-v3.md
 ---
 
 ---
