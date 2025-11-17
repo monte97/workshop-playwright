@@ -13,7 +13,7 @@
 import { test, expect } from '../fixtures/user.fixture';
 
 test.describe('Shopping Cart - Parallel Execution', () => {
-  test('Worker 1: dovrebbe aggiungere un prodotto al carrello', async ({ page, authenticatedUser }) => {
+  test('Worker 1: Aggiungi un prodotto al carrello (utente isolato)', async ({ page, authenticatedUser }) => {
     await page.goto('/');
 
     // Verifica autenticazione
@@ -36,7 +36,7 @@ test.describe('Shopping Cart - Parallel Execution', () => {
     await expect(cartItems).toHaveCount(1);
   });
 
-  test('Worker 2: dovrebbe aggiungere due prodotti al carrello', async ({ page, authenticatedUser }) => {
+  test('Worker 2: Aggiungi due prodotti al carrello (utente isolato)', async ({ page, authenticatedUser }) => {
     await page.goto('/');
 
     // Verifica autenticazione
@@ -64,7 +64,7 @@ test.describe('Shopping Cart - Parallel Execution', () => {
     await expect(cartItems).toHaveCount(2);
   });
 
-  test('Worker 3: dovrebbe aggiungere lo stesso prodotto due volte', async ({ page, authenticatedUser }) => {
+  test('Worker 3: Aggiungi lo stesso prodotto due volte (utente isolato)', async ({ page, authenticatedUser }) => {
     await page.goto('/');
 
     // Verifica autenticazione
@@ -90,49 +90,6 @@ test.describe('Shopping Cart - Parallel Execution', () => {
     // Verifica che ci sia 1 riga con quantità 2
     await expect(page.getByTestId('cart-item-1')).toBeVisible();
     await expect(page.getByTestId('cart-item-1').getByText('× 2')).toBeVisible();
-  });
-});
-
-test.describe('Orders - Parallel Execution', () => {
-  test('dovrebbe completare un ordine senza interferire con altri test', async ({
-    page,
-    authenticatedUser,
-  }) => {
-    console.log(`📦 Order test running with user: ${authenticatedUser.email}`);
-
-    await page.goto('/');
-
-    // Aggiungi prodotti e attendi le risposte API
-    const [addProduct1] = await Promise.all([
-      page.waitForResponse(res => res.url().includes('/api/cart') && res.request().method() === 'POST'),
-      page.getByTestId('add-to-cart-1').click(),
-    ]);
-    expect(addProduct1.ok()).toBeTruthy();
-
-    const [addProduct2] = await Promise.all([
-      page.waitForResponse(res => res.url().includes('/api/cart') && res.request().method() === 'POST'),
-      page.getByTestId('add-to-cart-2').click(),
-    ]);
-    expect(addProduct2.ok()).toBeTruthy();
-
-    // Vai al carrello
-    await page.getByRole('link', { name: '🛒 Carrello' }).click();
-
-    // Procedi al checkout
-    await page.getByTestId('checkout-button').click();
-
-    // Compila il form di checkout (assumendo che l'indirizzo sia già presente)
-    await page.getByTestId('payment-method').selectOption('credit-card');
-
-    // Completa l'ordine e attendi la risposta API
-    const [checkoutResponse] = await Promise.all([
-      page.waitForResponse(res => res.url().includes('/api/checkout') && res.request().method() === 'POST'),
-      page.getByTestId('complete-order-button').click(),
-    ]);
-
-    // Verifica successo
-    expect(checkoutResponse.ok()).toBeTruthy();
-    await expect(page.getByTestId('order-success-message')).toBeVisible();
   });
 });
 

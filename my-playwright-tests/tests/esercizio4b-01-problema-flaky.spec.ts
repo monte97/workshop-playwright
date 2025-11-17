@@ -29,7 +29,7 @@ test.describe('⚠️ PROBLEMA: Cart Tests con Utente Condiviso', () => {
   // Usa l'autenticazione standard (stesso utente per tutti)
   test.use({ storageState: 'playwright/.auth/user.json' });
 
-  test('[FLAKY - SHOULD FAIL] Worker A aggiunge 1 prodotto', async ({ page }) => {
+  test('[FLAKY - SHOULD FAIL] Worker A - Aggiunge 1 prodotto (fallisce con utente condiviso)', async ({ page }) => {
     await page.goto('/');
 
     console.log('🔴 Worker A: Starting with shared user test@example.com');
@@ -53,7 +53,7 @@ test.describe('⚠️ PROBLEMA: Cart Tests con Utente Condiviso', () => {
     });
   });
 
-  test('[FLAKY - SHOULD FAIL] Worker B aggiunge 2 prodotti', async ({ page }) => {
+  test('[FLAKY - SHOULD FAIL] Worker B - Aggiunge 2 prodotti (fallisce con utente condiviso)', async ({ page }) => {
     await page.goto('/');
 
     console.log('🔴 Worker B: Starting with shared user test@example.com');
@@ -78,7 +78,7 @@ test.describe('⚠️ PROBLEMA: Cart Tests con Utente Condiviso', () => {
     });
   });
 
-  test('[FLAKY - SHOULD FAIL] Worker C verifica badge carrello', async ({ page }) => {
+  test('[FLAKY - SHOULD FAIL] Worker C - Verifica badge carrello (fallisce con utente condiviso)', async ({ page }) => {
     await page.goto('/');
 
     console.log('🔴 Worker C: Starting with shared user test@example.com');

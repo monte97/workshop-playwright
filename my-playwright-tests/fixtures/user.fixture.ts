@@ -37,9 +37,11 @@ type UserFixtures = {
  * Crea un nuovo utente via API
  */
 async function createUser(request: APIRequestContext): Promise<AuthenticatedUser> {
-  const uniqueEmail = `test-${randomUUID().slice(0, 8)}@example.com`;
+  const timestamp = Date.now();
+  const uniqueId = randomUUID().slice(0, 8);
+  const uniqueEmail = `test-${timestamp}-${uniqueId}@example.com`;
   const password = 'test123';
-  const name = `Test User ${uniqueEmail.split('@')[0]}`;
+  const name = `Test User ${timestamp}`;
 
   const response = await request.post('/api/users', {
     data: { email: uniqueEmail, password, name },
