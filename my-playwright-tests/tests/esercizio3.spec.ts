@@ -44,9 +44,12 @@ test('perform order', async ({ page }) => {
     await page.getByTestId('place-order-button').click();
     await expect(page.locator('#successMessage')).toContainText('Ordine Completato!');
     await page.getByRole('link', { name: 'Visualizza Ordini' }).click();
-    await expect(page.getByTestId('order-1')).toMatchAriaSnapshot(`
+
+    // Seleziona l'ordine più recente (primo nella lista) per supportare esecuzioni multiple
+    const lastOrder = page.getByTestId(/^order-\d+$/).first();
+    await expect(lastOrder).toMatchAriaSnapshot(`
       - strong: "📍 Indirizzo di spedizione:"
       - text: "/mario rossi via spedizione 1 \\\\d+ milano Tel: \\\\d+/"
       `);
-    await expect(page.getByTestId('order-1')).toContainText('Laptop ProBook 15 1 × €899.99 €899.99');
+    await expect(lastOrder).toContainText('Laptop ProBook 15 1 × €899.99 €899.99');
 })

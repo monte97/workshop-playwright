@@ -48,6 +48,10 @@ src: ./exercises/04-robust-tests.md
 ---
 
 ---
+src: ./exercises/04b-parallel-workers.md
+---
+
+---
 src: ./exercises/05-accessibility.md
 ---
 
@@ -60,6 +64,7 @@ src: ./exercises/05-accessibility.md
 2.  **Visual Regression Testing**: Verifica dell'integrità visiva tramite confronto di screenshot.
 3.  **Ottimizzazione del Login**: Utilizzo di `setup` project per un'autenticazione efficiente.
 4.  **Test Robusti e Isolati**: Gestione di dati dinamici, race condition e setup con fixture.
+4b. **Scalare i Test con Workers Multipli**: Esecuzione parallela, isolamento tra workers, fixture con API.
 5.  **Test di Accessibilità**: Integrazione di controlli automatici di accessibilità con `axe-core`.
 
 **Principio guida**: Automatizzare non solo il "cosa" fa l'applicazione, ma anche il "come" appare e quanto è accessibile.

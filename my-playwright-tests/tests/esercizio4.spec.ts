@@ -32,14 +32,15 @@ const myTest = base.extend<MyFixtures>({
 
 // 3. Ora usiamo la fixture per scrivere test REALI
 
-// Test 1: Happy Path (tutto corretto)
-myTest('dovrebbe creare un nuovo elemento con dati validi', async ({ adminCreateFormPage }) => {
+// Test 1: Versione INGENUA - Usa dati statici
+// ❌ SHOULD FAIL on second run - Duplicate product name
+myTest('[SHOULD FAIL 2nd run] v1 - dati statici causano conflitto', async ({ adminCreateFormPage }) => {
   // 'adminCreateFormPage' è l'oggetto 'page' che la fixture ci ha passato
   // Siamo già sul modulo di creazione grazie alla fixture
   const page = adminCreateFormPage;
 
   await page.getByTestId('create-name').click();
-  await page.getByTestId('create-name').fill('Nome del prodotto');
+  await page.getByTestId('create-name').fill('Nome del prodotto'); // ⚠️ STATICO - fallirà alla 2a esecuzione!
   await page.getByTestId('create-name').press('Tab');
   await page.getByTestId('create-price').fill('15');
   await page.getByTestId('create-stock').click();
@@ -61,10 +62,12 @@ myTest('dovrebbe mostrare un errore se il nome è mancante', async ({ adminCreat
 
 /* ----- */
 
-myTest('dovrebbe creare un nuovo elemento con dati validi - v2', async ({ adminCreateFormPage }) => {
+// Test 2: Versione MIGLIORATA - Usa dati dinamici ma con timeout fisso
+// ⚠️ FLAKY - Può fallire a causa del delay artificiale del backend (3s > 1s timeout)
+myTest('[FLAKY] v2 - dati dinamici ma race condition con timeout', async ({ adminCreateFormPage }) => {
   const page = adminCreateFormPage;
-  
-  // 1. Genera dati dinamici
+
+  // 1. Genera dati dinamici (risolve il problema dei duplicati)
   const uniqueName = `Prodotto Test ${randomUUID().slice(0, 8)}`; // Un nome unico
   const randomPrice = Math.floor(Math.random() * 200 + 1).toString(); // Un prezzo tra 1 e 200
   const randomStock = Math.floor(Math.random() * 500 + 50).toString(); // Uno stock tra 50 e 500
@@ -74,19 +77,22 @@ myTest('dovrebbe creare un nuovo elemento con dati validi - v2', async ({ adminC
   await page.getByTestId('create-price').fill(randomPrice);
   await page.getByTestId('create-stock').fill(randomStock);
   // --- Fine Modifica ---
-  
+
   await page.getByTestId('create-category').selectOption('electronics');
-  
+
   await page.getByRole('button', { name: 'Crea Prodotto' }).click();
 
-  // --- Modifica Asserzione ---
+  // ⚠️ PROBLEMA: timeout di 1s ma il backend ha un delay del 70% con 3s
+  // Fallirà ~70% delle volte!
   await expect(page.getByTestId('alert-success')).toBeVisible({ timeout: 1000 });
 });
 
-myTest('dovrebbe creare un nuovo elemento con dati validi - v3', async ({ adminCreateFormPage }) => {
+// Test 3: Versione ROBUSTA - Usa waitForResponse
+// ✅ SHOULD PASS - Risolve sia il problema dei duplicati che della race condition
+myTest('✅ v3 - soluzione robusta con waitForResponse', async ({ adminCreateFormPage }) => {
   const page = adminCreateFormPage;
-  
-  // 1. Genera dati dinamici
+
+  // 1. Genera dati dinamici (risolve problema duplicati)
   const uniqueName = `Prodotto Test ${randomUUID().slice(0, 8)}`; // Un nome unico
   const randomPrice = Math.floor(Math.random() * 200 + 1).toString(); // Un prezzo tra 1 e 200
   const randomStock = Math.floor(Math.random() * 500 + 50).toString(); // Uno stock tra 50 e 500
@@ -96,16 +102,16 @@ myTest('dovrebbe creare un nuovo elemento con dati validi - v3', async ({ adminC
   await page.getByTestId('create-price').fill(randomPrice);
   await page.getByTestId('create-stock').fill(randomStock);
   // --- Fine Modifica ---
-  
+
   await page.getByTestId('create-category').selectOption('electronics');
-  
-  // Attende la risposta dell'API dopo aver inviato il modulo
+
+  // ✅ SOLUZIONE: Attende la risposta dell'API (risolve race condition)
   const [response] = await Promise.all([
     page.waitForResponse(response => response.url().includes('/api/products') && response.request().method() === 'POST'),
     page.getByTestId('submit-create').click()
   ]);
   expect(response.ok()).toBeTruthy(); // Verifica che la chiamata API sia andata a buon fine
 
-  // --- Modifica Asserzione ---
+  // Ora l'asserzione è sicura perché sappiamo che l'API ha risposto
   await expect(page.getByTestId('alert-success')).toBeVisible({ timeout: 1000 });
 });
