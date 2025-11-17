@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test 1', async ({ page }) => {
+test('Aggiungi più prodotti al carrello', async ({ page }) => {
     await page.goto('http://localhost:3000/');
     await page.getByRole('link', { name: 'Login' }).click();
     await page.getByTestId('email-input').click();
@@ -23,8 +23,7 @@ test('test 1', async ({ page }) => {
 });
 
 
-test('test login', async ({ page }) => {
-  // Recording...
+test('Effettua il login e verifica il benvenuto', async ({ page }) => {
   await page.goto('http://localhost:3000/');
   await page.getByRole('link', { name: 'Login' }).click();
   await expect(page.locator('h1')).toContainText('Accedi');

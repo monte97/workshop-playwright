@@ -34,7 +34,7 @@ const myTest = base.extend<MyFixtures>({
 
 // Test 1: Versione INGENUA - Usa dati statici
 // ❌ SHOULD FAIL on second run - Duplicate product name
-myTest('[SHOULD FAIL 2nd run] v1 - dati statici causano conflitto', async ({ adminCreateFormPage }) => {
+myTest('[PROBLEMA] Fixture con dati statici - fallisce alla 2ª esecuzione', async ({ adminCreateFormPage }) => {
   // 'adminCreateFormPage' è l'oggetto 'page' che la fixture ci ha passato
   // Siamo già sul modulo di creazione grazie alla fixture
   const page = adminCreateFormPage;
@@ -51,7 +51,7 @@ myTest('[SHOULD FAIL 2nd run] v1 - dati statici causano conflitto', async ({ adm
 });
 
 // Test 2: Sad Path (dati mancanti)
-myTest('dovrebbe mostrare un errore se il nome è mancante', async ({ adminCreateFormPage }) => {
+myTest('Fixture - validazione: errore se nome è mancante', async ({ adminCreateFormPage }) => {
   const page = adminCreateFormPage;
 
   await page.getByTestId('create-category').selectOption('electronics');
@@ -64,7 +64,7 @@ myTest('dovrebbe mostrare un errore se il nome è mancante', async ({ adminCreat
 
 // Test 2: Versione MIGLIORATA - Usa dati dinamici ma con timeout fisso
 // ⚠️ FLAKY - Può fallire a causa del delay artificiale del backend (3s > 1s timeout)
-myTest('[FLAKY] v2 - dati dinamici ma race condition con timeout', async ({ adminCreateFormPage }) => {
+myTest('[FLAKY] Dati dinamici ma race condition con timeout fisso', async ({ adminCreateFormPage }) => {
   const page = adminCreateFormPage;
 
   // 1. Genera dati dinamici (risolve il problema dei duplicati)
@@ -89,7 +89,7 @@ myTest('[FLAKY] v2 - dati dinamici ma race condition con timeout', async ({ admi
 
 // Test 3: Versione ROBUSTA - Usa waitForResponse
 // ✅ SHOULD PASS - Risolve sia il problema dei duplicati che della race condition
-myTest('✅ v3 - soluzione robusta con waitForResponse', async ({ adminCreateFormPage }) => {
+myTest('✅ Soluzione robusta con dati dinamici e waitForResponse', async ({ adminCreateFormPage }) => {
   const page = adminCreateFormPage;
 
   // 1. Genera dati dinamici (risolve problema duplicati)
