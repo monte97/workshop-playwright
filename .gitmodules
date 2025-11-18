@@ -1,3 +1,6 @@
+[submodule "workshop-commons"]
+	path = workshop-commons
+	url = git@github.com:monte97/workshop-commons.git
 [submodule "workshop-demo"]
 	path = workshop-demo
 	url = git@github.com:monte97/workshop-demo.git
